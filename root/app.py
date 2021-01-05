@@ -10,7 +10,7 @@ app = Flask(__name__)
 app.debug = True
 
 
-ENV = 'dev'
+ENV = 'post'
 
 if ENV == 'dev':
     app.debug = True
