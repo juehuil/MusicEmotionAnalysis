@@ -47,7 +47,7 @@ class Music(db.Model):
 
 class UserInfo(db.Model):
     __tablename__ = 'userinfo'
-    uid = db.Column(db.Integer, primary_key=True)
+    uid = db.Column(db.Integer, primary_key=True, autoincrement=True)
     uname = db.Column(db.String(200), unique=True)
     upw = db.Column(db.String(200))
     utype = db.Column(db.Integer)       # 0: non, 0x100: Classical Fan, 0x010: pop Fan, 0x001: Yanni Fan
@@ -169,12 +169,11 @@ def create_exp():
 
 @app.route('/')
 def index():
-    id = 1
     name = "jesy"
     pw = "123456789"
     type = 6
     # app.logger.debug(name + " " + pw + " " + type)
-    new_user = UserInfo(uid=id, uname=name, upw=pw, utype=type)
+    new_user = UserInfo(uname=name, upw=pw, utype=type)
     # app.logger.info(new_user.uid)
     db.session.add(new_user)
     db.session.commit()
