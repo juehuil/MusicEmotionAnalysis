@@ -47,7 +47,7 @@ class Music(db.Model):
 
 class User(db.Model):
     __tablename__ = 'user'
-    uid = db.Column(db.Integer, primary_key=True, autoincrement= True)
+    uid = db.Column(db.Integer, primary_key=True)
     uname = db.Column(db.String(200), unique=True)
     upw = db.Column(db.String(200))
     utype = db.Column(db.Integer)       # 0: non, 0x100: Classical Fan, 0x010: pop Fan, 0x001: Yanni Fan
