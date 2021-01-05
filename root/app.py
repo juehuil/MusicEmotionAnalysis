@@ -45,8 +45,8 @@ class Music(db.Model):
         self.ma = ma
 
 
-class User(db.Model):
-    __tablename__ = 'user'
+class UserInfo(db.Model):
+    __tablename__ = 'userinfo'
     uid = db.Column(db.Integer, primary_key=True)
     uname = db.Column(db.String(200), unique=True)
     upw = db.Column(db.String(200))
@@ -173,7 +173,7 @@ def index():
     pw = "123456789"
     type = "6"
     app.logger.debug(name + " " + pw + " " + type)
-    new_user = User(uname=name, upw=pw, utype=type)
+    new_user = UserInfo(uname=name, upw=pw, utype=type)
     app.logger.info(new_user.uid)
     db.session.add(new_user)
     db.session.commit()
@@ -196,7 +196,7 @@ def register():
     pw = "123456789"
     type = "6"
     app.logger.debug(name + " " + pw + " " + type)
-    new_user = User(uname=name, upw=pw, utype=type)
+    new_user = UserInfo(uname=name, upw=pw, utype=type)
     app.logger.info(new_user.uid)
     db.session.add(new_user)
     db.session.commit()
