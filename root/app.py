@@ -1,18 +1,26 @@
 # creating Flask instance variable app
 
-from flask import Flask
+from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
+from ast import literal_eval
+import datetime
+import json
 
 app = Flask(__name__)
+app.debug = True
 
-ENV = 'post'
+
+ENV = 'dev'
 
 if ENV == 'dev':
     app.debug = True
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:lL@1998623@localhost/Test'
 else:
     app.debug = False
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://gmetnwrezeyokw:d1471eb9f2cb47425469418f6d2cb80a7ad29df34f4f928f1116c6103cd35142@ec2-75-101-212-64.compute-1.amazonaws.com:5432/dfirkg7gdep2ks'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://gmetnwrezeyokw:d1471eb9f2cb47425469418f6d2cb80' \
+                                            'a7ad29df34f4f928f1116c6103cd35142@ec2-75-101-212-64.compute-1' \
+                                            '.amazonaws.com:5432/dfirkg7gdep2ks'
+
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -35,9 +43,11 @@ class Music(db.Model):
         self.mtype = mtype
         self.mv = mv
         self.ma = ma
+
+
 class User(db.Model):
     __tablename__ = 'user'
-    uid = db.Column(db.Integer, primary_key=True)
+    uid = db.Column(db.Integer, primary_key=True, autoincrement= True)
     uname = db.Column(db.String(200), unique=True)
     upw = db.Column(db.String(200))
     utype = db.Column(db.Integer)       # 0: non, 0x100: Classical Fan, 0x010: pop Fan, 0x001: Yanni Fan
@@ -47,6 +57,8 @@ class User(db.Model):
         self.uname = uname
         self.upw = upw
         self.utype = utype
+
+
 class UserExp(db.Model):
     __tablename__ = 'user_exp'
     uid = db.Column(db.Integer, primary_key=True)
@@ -67,6 +79,8 @@ class UserExp(db.Model):
         self.final_a = final_a
         self.eval = eval
         self.recommend_rate = recommend_rate
+
+
 class UserMusic(db.Model):
     __tablename__ = 'user_music'
     uid = db.Column(db.Integer, primary_key=True)
@@ -87,6 +101,8 @@ class UserMusic(db.Model):
         self.a = a
         self.score = score
         self.familiarity = familiarity
+
+
 class UserMemory(db.Model):
     __tablename__ = 'user_memory'
     uid = db.Column(db.Integer, primary_key=True)
@@ -101,6 +117,55 @@ class UserMemory(db.Model):
         self.memory = memory
 
 
+def convert(byte):
+    data = literal_eval(byte.decode('utf-8'))
+    return data
+
+
+@app.route('/upload', methods=['POST'])
+def upload():
+    data = convert(request.data)
+    now = datetime.datetime.utcnow()
+    data["upload_time"] = now.strftime('%Y-%m-%d %H:%M:%S')
+    data["v_counts"] = 0
+    data["j_counts"] = 0
+    cur = mysql.connection.cursor()
+    #cur.execute("INSERT INTO Category(compet_id, category_name) VALUES(1, 'Best Movie')")
+    cur.execute("INSERT INTO Movie(uid, film_name, v_counts, j_counts, upload_time, url, category_id, summary) VALUES(%(uid)s,%(film_name)s,%(v_counts)s,%(j_counts)s,%(upload_time)s,%(url)s,%(category_id)s,%(summary)s)",data)
+    mysql.connection.commit()
+    return "upload success"
+
+@app.route('/login', methods=['POST'])
+def login():
+    data = convert(request.data)
+    name = data["uname"]
+    upw = data["upw"]
+    # SELECT uid FROM table WHERE uname = uname AND upw = upw
+    return "login success"
+
+@app.route('/expnum', methods=['POST'])
+def expnum():
+    data = convert(request.data)
+    uid = data["uid"]
+    # SELECT exp_num FROM table WHERE uid = uid
+    return exp_num + 1
+
+@app.route('/create_exp', methods=['POST'])
+def create_exp():
+    data = convert(request.data)
+    exp_num = data["exp_num"]
+    uid = data["uid"]
+    # INSERT uid, exp_num INTO table
+    return exp_num + 1
+
+@app.route('/', methods=['POST'])
+def create_exp():
+    data = convert(request.data)
+    exp_num = data["exp_num"]
+    uid = data["uid"]
+    # INSERT uid, exp_num INTO table
+    return exp_num + 1
+
 @app.route('/')
 def index():
     return 'it works!'
@@ -109,3 +174,17 @@ def index():
 @app.route('/<name>')
 def hello(name):
     return 'it works! {0}'.format(name)
+
+@app.route('register', methods=['POST'])
+def register():
+    data = convert(request.data)
+    name = data["uname"]
+    pw = data["upw"]
+    type = data["utype"]
+    app.logger.info(data)
+    app.logger.debug(name + " " + pw + " " + type)
+    new_user = User(uname=name, upw=pw, utype=type)
+    app.logger.info(new_user.uid)
+    db.session.add(new_user)
+    db.session.commit()
+    app.logger.info(new_user.uid)
