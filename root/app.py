@@ -169,12 +169,12 @@ def create_exp():
 
 @app.route('/')
 def index():
-    #id = 1
+    id = 1
     name = "jesy"
     pw = "123456789"
     type = 6
     # app.logger.debug(name + " " + pw + " " + type)
-    new_user = UserInfo(uname=name, upw=pw, utype=type)
+    new_user = UserInfo(uid=id, uname=name, upw=pw, utype=type)
     # app.logger.info(new_user.uid)
     db.session.add(new_user)
     db.session.commit()
