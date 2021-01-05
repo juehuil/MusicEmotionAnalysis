@@ -169,9 +169,10 @@ def create_exp():
 
 @app.route('/')
 def index():
+    #id = 1
     name = "jesy"
     pw = "123456789"
-    type = "6"
+    type = 6
     # app.logger.debug(name + " " + pw + " " + type)
     new_user = UserInfo(uname=name, upw=pw, utype=type)
     # app.logger.info(new_user.uid)
