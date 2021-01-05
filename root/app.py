@@ -172,8 +172,8 @@ def index():
     name = "jesy"
     pw = "123456789"
     type = "6"
-    app.logger.debug(name + " " + pw + " " + type)
-    new_user = UserInfo(uname=name, upw=pw, utype=type)
+    # app.logger.debug(name + " " + pw + " " + type)
+    # new_user = UserInfo(uname=name, upw=pw, utype=type)
     # app.logger.info(new_user.uid)
     # db.session.add(new_user)
     # db.session.commit()
@@ -185,19 +185,19 @@ def index():
 def hello(name):
     return 'it works! {0}'.format(name)
 
-@app.route('/register', methods=['POST'])
-def register():
-    #data = convert(request.data)
-    #name = data["uname"]
-    #pw = data["upw"]
-    #type = data["utype"]
-    #app.logger.info(data)
-    name = "jesy"
-    pw = "123456789"
-    type = "6"
-    app.logger.debug(name + " " + pw + " " + type)
-    new_user = UserInfo(uname=name, upw=pw, utype=type)
-    app.logger.info(new_user.uid)
-    db.session.add(new_user)
-    db.session.commit()
-    app.logger.info(new_user.uid)
+# @app.route('/register', methods=['POST'])
+# def register():
+#     #data = convert(request.data)
+#     #name = data["uname"]
+#     #pw = data["upw"]
+#     #type = data["utype"]
+#     #app.logger.info(data)
+#     name = "jesy"
+#     pw = "123456789"
+#     type = "6"
+#     app.logger.debug(name + " " + pw + " " + type)
+#     new_user = UserInfo(uname=name, upw=pw, utype=type)
+#     app.logger.info(new_user.uid)
+#     db.session.add(new_user)
+#     db.session.commit()
+#     app.logger.info(new_user.uid)
