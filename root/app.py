@@ -121,7 +121,7 @@ def convert(byte):
     data = literal_eval(byte.decode('utf-8'))
     return data
 
-
+"""
 @app.route('/upload', methods=['POST'])
 def upload():
     data = convert(request.data)
@@ -165,6 +165,7 @@ def create_exp():
     uid = data["uid"]
     # INSERT uid, exp_num INTO table
     return exp_num + 1
+"""
 
 @app.route('/')
 def index():
@@ -177,11 +178,14 @@ def hello(name):
 
 @app.route('register', methods=['POST'])
 def register():
-    data = convert(request.data)
-    name = data["uname"]
-    pw = data["upw"]
-    type = data["utype"]
-    app.logger.info(data)
+    #data = convert(request.data)
+    #name = data["uname"]
+    #pw = data["upw"]
+    #type = data["utype"]
+    #app.logger.info(data)
+    name = "jesy"
+    pw = "123456789"
+    type = "6"
     app.logger.debug(name + " " + pw + " " + type)
     new_user = User(uname=name, upw=pw, utype=type)
     app.logger.info(new_user.uid)
