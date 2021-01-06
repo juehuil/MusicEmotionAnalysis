@@ -45,8 +45,8 @@ class Music(db.Model):
         self.ma = ma
 
 
-class UserInfo(db.Model):
-    __tablename__ = 'userinfo'
+class User(db.Model):
+    __tablename__ = 'user'
     uid = db.Column(db.Integer, primary_key=True, autoincrement=True)
     uname = db.Column(db.String(200), unique=True)
     upw = db.Column(db.String(200))
@@ -55,23 +55,15 @@ class UserInfo(db.Model):
 class UserExp(db.Model):
     __tablename__ = 'user_exp'
     uid = db.Column(db.Integer, primary_key=True)
-    exp_num = db.Column(db.Integer, unique = True)
+    exp_num = db.Column(db.Integer, unique=True)
+    exp_start = db.Column(db.DateTime, unique=True)
+    exp_end = db.Column(db.DateTime, unique=True)
     initial_v = db.Column(db.Integer)
     initial_a = db.Column(db.Integer)
     final_v = db.Column(db.Integer)
     final_a = db.Column(db.Integer)
     eval = db.Column(db.Integer)    ########
     recommend_rate = db.Column(db.Integer)
-
-    def __init__(self, uid, exp_num, initial_v, initial_a, final_v, final_a, eval, recommend_rate):
-        self.uid = uid
-        self.exp_num =exp_num
-        self.initial_v = initial_v
-        self.initial_a = initial_a
-        self.final_v =final_v
-        self.final_a = final_a
-        self.eval = eval
-        self.recommend_rate = recommend_rate
 
 
 class UserMusic(db.Model):
@@ -166,7 +158,7 @@ def index():
     name = "jessy"
     pw = "12345689"
 
-    user = UserInfo.query.filter_by(uname=name).first()
+    user = User.query.filter_by(uname=name).first()
     if (user is None):
         return "user name does not exist!"
     elif (user.upw == "123456789"):
@@ -184,11 +176,16 @@ def login():
     name = data["uname"]
     pw = data["upw"]
 
-    user = UserInfo.query.filter_by(uname=name).first()
+    user = User.query.filter_by(uname=name).first()
     if (user is None):
         return "user name does not exist!"
     elif (user.upw == pw):
-        return 'You are logged in'
+        user_exp_num = UserExp.query.filter_by(uid=user.uid).order_by("exp_num desc")
+        if user_exp_num == None:
+            return 0
+        else:
+            return user_exp_num
+        return name
     else:
         return 'Incorrect Password!'
 
@@ -198,16 +195,10 @@ def register():
     name = data["uname"]
     pw = data["upw"]
     user_type = data["utype"]
-    #name = "Abcde"
-    #pw = "123456"
-    #user_type = 5
-    # print(name + " " + pw + " " + user_type)
-    user = UserInfo.query.filter_by(uname=name).first()
+    user = User.query.filter_by(uname=name).first()
     if user != None:
         return "User Already Exist!"
-    new_user = UserInfo(uname=name, upw=pw, utype=user_type)
-    #app.logger.info(new_user.uid)
+    new_user = User(uname=name, upw=pw, utype=user_type)
     db.session.add(new_user)
     db.session.commit()
-    #app.logger.info(new_user.uid)
     return new_user.uname + "!!"
