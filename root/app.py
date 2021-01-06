@@ -52,11 +52,11 @@ class UserInfo(db.Model):
     upw = db.Column(db.String(200))
     utype = db.Column(db.Integer)       # 0: non, 0x100: Classical Fan, 0x010: pop Fan, 0x001: Yanni Fan
 
-    def __init__(self, uid, uname, upw, utype):
-        self.uid = uid
-        self.uname = uname
-        self.upw = upw
-        self.utype = utype
+    #def __init__(self, uid, uname, upw, utype):
+    #    self.uid = uid
+    #    self.uname = uname
+    #    self.upw = upw
+    #    self.utype = utype
 
 
 class UserExp(db.Model):
@@ -105,7 +105,7 @@ class UserMusic(db.Model):
 
 class UserMemory(db.Model):
     __tablename__ = 'user_memory'
-    uid = db.Column(db.Integer, primary_key=True)
+    uid = db.Column(db.Integer, primary_key=True, autoincrement=True)
     exp_num = db.Column(db.Integer, primary_key=True, unique=True)
     music_num = db.Column(db.Integer)
     memory = db.Column(db.Text())
@@ -169,7 +169,7 @@ def create_exp():
 
 @app.route('/')
 def index():
-    name = "jesy"
+    name = "jesssy"
     pw = "123456789"
     type = 6
     # app.logger.debug(name + " " + pw + " " + type)
