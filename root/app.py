@@ -173,7 +173,7 @@ def login():
     elif (user.upw == pw):
         user_exp_num = UserExp.query.filter_by(uid=user.uid).first()
         if user_exp_num is None:
-            return 0
+            return "0"
         #user_exp_num = user_exp_num.order_by("exp_num desc")
         return user_exp_num.exp_num
     else:
