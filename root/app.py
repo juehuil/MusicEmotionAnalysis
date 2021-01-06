@@ -51,6 +51,7 @@ class User(db.Model):
     uname = db.Column(db.String(200), unique=True)
     upw = db.Column(db.String(200))
     utype = db.Column(db.Integer)       # 0: non, 0x100: Classical Fan, 0x010: pop Fan, 0x001: Yanni Fan
+    ustart = db.Column(db.Date)         # start date of the first experiment
 
 class UserExp(db.Model):
     __tablename__ = 'user_exp'
@@ -171,10 +172,10 @@ def login():
     if (user is None):
         return "user name does not exist!"
     elif (user.upw == pw):
-        user_exp_num = UserExp.query.filter_by(uid=user.uid)
+        user_exp_num = UserExp.query.filter_by(uid=user.uid).first()
         if user_exp_num is None:
             return str(0)
-        user_exp_num = user_exp_num.order_by("exp_num desc")
+        user_exp_num = UserExp.query.filter_by(uid=user.uid).order_by("exp_num desc")
         return str(user_exp_num.exp_num)
     else:
         return 'Incorrect Password!'
