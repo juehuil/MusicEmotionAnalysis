@@ -200,7 +200,6 @@ def register():
 
 @app.route('/registerTest', methods=['POST'])
 def registerTest():
-    return "Success!!"
     # data = convert(request.data)
     name = "Abc"
     pw = "123456"
@@ -211,3 +210,4 @@ def registerTest():
     db.session.add(new_user)
     db.session.commit()
     #app.logger.info(new_user.uid)
+    return "Success!!"
