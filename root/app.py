@@ -166,8 +166,8 @@ def index():
     name = "jesssy"
     pw = "123456789"
 
-    user = UserInfo.query.filter_by(username=name).first()
-    if (user.pw == "123456789"):
+    user = UserInfo.query.filter_by(uname=name).first()
+    if (user.upw == "123456789"):
         return 'it works!'
     else:
         return 'it does not work!'
