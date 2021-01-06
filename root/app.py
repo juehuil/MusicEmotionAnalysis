@@ -208,7 +208,6 @@ def registerTest():
     new_user = UserInfo(uname=name, upw=pw, utype=user_type)
     #app.logger.info(new_user.uid)
     db.session.add(new_user)
-    return new_user.uname + "!!"
     db.session.commit()
     #app.logger.info(new_user.uid)
-    return "Success!!"
+    return new_user.uname + "!!"
