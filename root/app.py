@@ -36,15 +36,6 @@ class Music(db.Model):
     mv = db.Column(db.Integer)
     ma = db.Column(db.Integer)
 
-    def __init__(self, mid, mname, murl, mtype, mv, ma):
-        self.mid = mid
-        self.mname = mname
-        self.murl = murl
-        self.mtype = mtype
-        self.mv = mv
-        self.ma = ma
-
-
 class User(db.Model):
     __tablename__ = 'user_info'
     uid = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -192,3 +183,14 @@ def register():
     db.session.add(new_user)
     db.session.commit()
     return new_user.uname + "!!"
+
+@app.route('/music', methods=['POST'])
+def music_playing():
+    pass
+
+
+def add_music(name, url, type, v, a):
+    new_music = Music(mname=name, murl=url, mtype=type)
+    db.session.add(new_music)
+    db.session.commit()
+    print("success")
