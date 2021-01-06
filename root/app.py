@@ -200,13 +200,13 @@ def register():
 
 @app.route('/registerTest', methods=['POST'])
 def registerTest():
-    #data = convert(request.data)
-    #name = data["uname"]
-    #pw = data["upw"]
-    #user_type = data["utype"]
-    name = "Abcde"
-    pw = "123456"
-    user_type = 5
+    data = convert(request.data)
+    name = data["uname"]
+    pw = data["upw"]
+    user_type = data["utype"]
+    #name = "Abcde"
+    #pw = "123456"
+    #user_type = 5
     # print(name + " " + pw + " " + user_type)
     new_user = UserInfo(uname=name, upw=pw, utype=user_type)
     #app.logger.info(new_user.uid)
