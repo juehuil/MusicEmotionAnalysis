@@ -178,7 +178,19 @@ def index():
 def hello(name):
     return 'it works! {0}'.format(name)
 
-# @app.route('/login', methods=['POST'])
+@app.route('/login', methods=['POST'])
+def login():
+    data = convert(request.data)
+    name = data["uname"]
+    pw = data["upw"]
+
+    user = UserInfo.query.filter_by(uname=name).first()
+    if (user is None):
+        return "user name does not exist!"
+    elif (user.upw == pw):
+        return 'You are logged in'
+    else:
+        return 'Incorrect Password!'
 
 @app.route('/register', methods=['POST'])
 def register():
@@ -190,6 +202,9 @@ def register():
     #pw = "123456"
     #user_type = 5
     # print(name + " " + pw + " " + user_type)
+    user = UserInfo.query.filter_by(uname=name).first()
+    if user != None:
+        return "User Already Exist!"
     new_user = UserInfo(uname=name, upw=pw, utype=user_type)
     #app.logger.info(new_user.uid)
     db.session.add(new_user)
