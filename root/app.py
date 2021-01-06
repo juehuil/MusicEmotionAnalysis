@@ -163,7 +163,7 @@ def create_exp():
 @app.route('/')
 def index():
     ### Test Login
-    name = "jesssy"
+    name = "jessy"
     pw = "12345689"
 
     user = UserInfo.query.filter_by(uname=name).first()
