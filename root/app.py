@@ -46,7 +46,7 @@ class Music(db.Model):
 
 
 class User(db.Model):
-    __tablename__ = 'user'
+    __tablename__ = 'user_info'
     uid = db.Column(db.Integer, primary_key=True, autoincrement=True)
     uname = db.Column(db.String(200), unique=True)
     upw = db.Column(db.String(200))
@@ -62,7 +62,7 @@ class UserExp(db.Model):
     initial_a = db.Column(db.Integer)
     final_v = db.Column(db.Integer)
     final_a = db.Column(db.Integer)
-    eval = db.Column(db.Integer)    ########
+    eval = db.Column(db.Integer)
     recommend_rate = db.Column(db.Integer)
 
 
@@ -77,15 +77,6 @@ class UserMusic(db.Model):
     score = db.Column(db.Integer)
     familiarity = db.Column(db.Integer)
 
-    def __init__(self, uid, exp_num, music_num, mid, v, a, score, familiarity):
-        self.uid = uid
-        self.exp_num = exp_num
-        self.music_num = music_num
-        self.mid = mid
-        self.v = v
-        self.a = a
-        self.score = score
-        self.familiarity = familiarity
 
 
 class UserMemory(db.Model):
