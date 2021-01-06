@@ -52,13 +52,6 @@ class UserInfo(db.Model):
     upw = db.Column(db.String(200))
     utype = db.Column(db.Integer)       # 0: non, 0x100: Classical Fan, 0x010: pop Fan, 0x001: Yanni Fan
 
-    #def __init__(self, uid, uname, upw, utype):
-    #    self.uid = uid
-    #    self.uname = uname
-    #    self.upw = upw
-    #    self.utype = utype
-
-
 class UserExp(db.Model):
     __tablename__ = 'user_exp'
     uid = db.Column(db.Integer, primary_key=True)
@@ -169,35 +162,33 @@ def create_exp():
 
 @app.route('/')
 def index():
+    ### Test Login
     name = "jesssy"
     pw = "123456789"
-    type = 6
-    # app.logger.debug(name + " " + pw + " " + type)
-    new_user = UserInfo(uname=name, upw=pw, utype=type)
-    # app.logger.info(new_user.uid)
-    db.session.add(new_user)
-    db.session.commit()
-    # app.logger.info(new_user.uid)
-    return 'it works!'
 
+    user = db.query.filter_by(username=name).first()
+    if (user.pw == "123456789"):
+        return 'it works!'
+    else:
+        return 'it does not work!'
 
 @app.route('/<name>')
 def hello(name):
     return 'it works! {0}'.format(name)
 
-# @app.route('/register', methods=['POST'])
-# def register():
-#     #data = convert(request.data)
-#     #name = data["uname"]
-#     #pw = data["upw"]
-#     #type = data["utype"]
-#     #app.logger.info(data)
-#     name = "jesy"
-#     pw = "123456789"
-#     type = "6"
-#     app.logger.debug(name + " " + pw + " " + type)
-#     new_user = UserInfo(uname=name, upw=pw, utype=type)
-#     app.logger.info(new_user.uid)
-#     db.session.add(new_user)
-#     db.session.commit()
-#     app.logger.info(new_user.uid)
+@app.route('/register', methods=['POST'])
+def register():
+    # data = convert(request.data)
+    # name = data["uname"]
+    # pw = data["upw"]
+    # type = data["utype"]
+    # app.logger.info(data)
+    name = "jesy"
+    pw = "123456789"
+    user_type = 6
+    app.logger.debug(name + " " + pw + " " + user_type)
+    new_user = UserInfo(uname=name, upw=pw, utype=user_type)
+    app.logger.info(new_user.uid)
+    db.session.add(new_user)
+    db.session.commit()
+    app.logger.info(new_user.uid)
