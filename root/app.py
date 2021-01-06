@@ -172,11 +172,10 @@ def login():
         return "user name does not exist!"
     elif (user.upw == pw):
         user_exp_num = UserExp.query.filter_by(uid=user.uid).order_by("exp_num desc")
-        if user_exp_num == None:
-            return 0
-        else:
-            return user_exp_num
-        return name
+        #if user_exp_num == None:
+        #    return 0
+        #user_exp_num = user_exp_num.order_by("exp_num desc")
+        return user_exp_num.exp_num
     else:
         return 'Incorrect Password!'
 
