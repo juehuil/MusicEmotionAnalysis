@@ -154,6 +154,7 @@ def hello(name):
     return 'it works! {0}'.format(name)
 
 @app.route('/login', methods=['POST'])
+@cross_origin()
 def login():
     data = convert(request.data)
     name = data["uname"]
@@ -194,3 +195,5 @@ def add_music(name, url, type, v, a):
     db.session.add(new_music)
     db.session.commit()
     print("success")
+
+
