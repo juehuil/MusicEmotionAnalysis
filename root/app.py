@@ -201,13 +201,14 @@ def register():
 @app.route('/registerTest', methods=['POST'])
 def registerTest():
     # data = convert(request.data)
-    name = "Abc"
+    name = "Abcd"
     pw = "123456"
     user_type = 5
     # print(name + " " + pw + " " + user_type)
     new_user = UserInfo(uname=name, upw=pw, utype=user_type)
     #app.logger.info(new_user.uid)
     db.session.add(new_user)
+    return new_user.uname + "!!"
     db.session.commit()
     #app.logger.info(new_user.uid)
     return "Success!!"
