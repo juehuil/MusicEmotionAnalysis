@@ -113,13 +113,6 @@ def login():
     # SELECT uid FROM table WHERE uname = uname AND upw = upw
     return "login success"
 
-@app.route('/expnum', methods=['POST'])
-def expnum():
-    data = convert(request.data)
-    uid = data["uid"]
-    # SELECT exp_num FROM table WHERE uid = uid
-    return exp_num + 1
-
 @app.route('/create_exp', methods=['POST'])
 def create_exp():
     data = convert(request.data)
@@ -169,7 +162,8 @@ def login():
         user_exp_num = UserExp.query.filter_by(uid=user.uid).order_by(UserExp.exp_num.desc()).first()
         if user_exp_num is None:
             return str(0) + " " + str(user.ustart)
-        return str(user_exp_num.exp_num) + " " + str(user.ustart)
+        #return str(user_exp_num.exp_num) + " " + str(user.ustart)
+        return json.dumps(({"exp_num":str(user_exp_num.exp_num),"start_date":str(user.ustart)},))
     else:
         return 'Incorrect Password!'
 
