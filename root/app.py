@@ -185,18 +185,18 @@ def hello(name):
 
 @app.route('/register', methods=['POST'])
 def register():
-    # data = convert(request.data)
-    # name = data["uname"]
-    # pw = data["upw"]
-    # type = data["utype"]
+    data = convert(request.data)
+    name = data["uname"]
+    pw = data["upw"]
+    user_type = data["utype"]
     # app.logger.info(data)
-    name = "jesy"
-    pw = "123456789"
-    user_type = 6
-    app.logger.debug(name + " " + pw + " " + user_type)
+    #name = "jesy"
+    #pw = "123456789"
+    #user_type = 6
+    #app.logger.debug(name + " " + pw + " " + user_type)
     new_user = UserInfo(uname=name, upw=pw, utype=user_type)
-    app.logger.info(new_user.uid)
+    #app.logger.info(new_user.uid)
     db.session.add(new_user)
     db.session.commit()
-    app.logger.info(new_user.uid)
+    #app.logger.info(new_user.uid)
 
