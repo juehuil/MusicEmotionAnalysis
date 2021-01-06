@@ -161,7 +161,7 @@ def login():
     elif (user.upw == pw):
         user_exp_num = UserExp.query.filter_by(uid=user.uid).order_by(UserExp.exp_num.desc()).first()
         if user_exp_num is None:
-            return json.dumps({"exp_num":0, "start_date":user.ustart})
+            return json.dumps({"exp_num": 0, "start_date":str(user.ustart)})
         #return str(user_exp_num.exp_num) + " " + str(user.ustart)
         return json.dumps({"exp_num":str(user_exp_num.exp_num),"start_date":str(user.ustart)})
     else:
