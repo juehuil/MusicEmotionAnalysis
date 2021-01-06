@@ -163,7 +163,7 @@ def create_exp():
 @app.route('/')
 def index():
     ### Test Login
-    name = "jesssy"
+    name = "jessy"
     pw = "123456789"
 
     user = UserInfo.query.filter_by(uname=name).first()
@@ -175,6 +175,11 @@ def index():
 @app.route('/<name>')
 def hello(name):
     return 'it works! {0}'.format(name)
+
+# @app.route('/login', methods=['POST'])
+
+
+
 
 @app.route('/register', methods=['POST'])
 def register():
@@ -192,3 +197,4 @@ def register():
     db.session.add(new_user)
     db.session.commit()
     app.logger.info(new_user.uid)
+
