@@ -2,6 +2,7 @@
 
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS, cross_origin
 from ast import literal_eval
 import datetime
 import json
