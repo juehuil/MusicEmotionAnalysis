@@ -171,7 +171,7 @@ def login():
     if (user is None):
         return "user name does not exist!"
     elif (user.upw == pw):
-        user_exp_num = UserExp.query.filter_by(uid=user.uid).order_by("exp_num desc")
+        user_exp_num = UserExp.query.filter_by(uid=user.uid)
         if user_exp_num == None:
             return 0
         #user_exp_num = user_exp_num.order_by("exp_num desc")
