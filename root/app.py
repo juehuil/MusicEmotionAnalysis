@@ -163,14 +163,16 @@ def create_exp():
 @app.route('/')
 def index():
     ### Test Login
-    name = "jessy"
-    pw = "123456789"
+    name = "jesssy"
+    pw = "12345689"
 
     user = UserInfo.query.filter_by(uname=name).first()
-    if (user.upw == "123456789"):
-        return 'it works!'
+    if (user is None):
+        return "user name does not exist!"
+    elif (user.upw == "123456789"):
+        return 'You are logged in'
     else:
-        return 'it does not work!'
+        return 'Incorrect Password!'
 
 @app.route('/<name>')
 def hello(name):
