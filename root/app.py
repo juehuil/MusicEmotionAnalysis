@@ -189,14 +189,24 @@ def register():
     name = data["uname"]
     pw = data["upw"]
     user_type = data["utype"]
-    # app.logger.info(data)
-    #name = "jesy"
-    #pw = "123456789"
-    #user_type = 6
-    #app.logger.debug(name + " " + pw + " " + user_type)
+    print(name + " " + pw + " " + user_type)
     new_user = UserInfo(uname=name, upw=pw, utype=user_type)
     #app.logger.info(new_user.uid)
     db.session.add(new_user)
     db.session.commit()
     #app.logger.info(new_user.uid)
 
+
+
+@app.route('/registerTest', methods=['POST'])
+def registerTest():
+    # data = convert(request.data)
+    name = "Abc"
+    pw = "123456"
+    user_type = 5
+    # print(name + " " + pw + " " + user_type)
+    new_user = UserInfo(uname=name, upw=pw, utype=user_type)
+    #app.logger.info(new_user.uid)
+    db.session.add(new_user)
+    db.session.commit()
+    #app.logger.info(new_user.uid)
