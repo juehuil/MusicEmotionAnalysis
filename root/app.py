@@ -201,7 +201,7 @@ def update_memory():
     user_exp_num = data["exp_num"]
     user_music_num = data["music_num"]
     user_mem = data["memory"]
-    result = get_sentiment_result(user_mem)['text']
+    result = str(get_sentiment_result(user_mem)['text'])
     return result
     new_memory = UserMemory(uid=user_id, exp_num=user_exp_num, music_num=user_music_num, memory=result)
     db.session.add(new_memory)
@@ -218,5 +218,4 @@ def music_recommend(order, v, a):
     music = Music.query.filter_by(mid=order).first()
     return json.dumps(
         {"mid": str(music.mid), "mname": str(music.mname), "murl": str(music.murl), "mtype": str(music.mtype)})
-
 
