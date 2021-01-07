@@ -49,7 +49,7 @@ class User(db.Model):
 class UserExp(db.Model):
     __tablename__ = 'user_exp'
     uid = db.Column(db.Integer, primary_key=True)
-    exp_num = db.Column(db.Integer, unique=True)
+    exp_num = db.Column(db.Integer)
     exp_start = db.Column(db.DateTime)
     exp_end = db.Column(db.DateTime)
     initial_v = db.Column(db.Integer)
@@ -198,7 +198,6 @@ def start_experiment():
     db.session.add(new_experiment)
     db.session.commit()
     return "Success!!"
-
 
 
 def add_music(name, url, type, v, a):
