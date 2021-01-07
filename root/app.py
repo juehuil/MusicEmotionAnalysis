@@ -201,7 +201,10 @@ def update_memory():
     user_exp_num = data["exp_num"]
     user_music_num = data["music_num"]
     user_mem = data["memory"]
-
+    result = get_sentiment_result(user_mem)['text']
+    new_memory = UserMemory(uid=user_id, exp_num=user_exp_num, music_num=user_music_num, memory=result)
+    db.session.add(new_memory)
+    db.session.commit()
 
 def add_music(name, url, type, v, a):
     new_music = Music(mname=name, murl=url, mtype=type)
