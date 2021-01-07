@@ -1,9 +1,10 @@
 # creating Flask instance variable app
-
+from ast import literal_eval
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS, cross_origin
-from ast import literal_eval
+
+from root.helpers import *
 import datetime
 import json
 
@@ -31,7 +32,7 @@ db = SQLAlchemy(app)
 
 class Music(db.Model):
     __tablename__ = 'music'
-    mid = db.Column(db.Integer, primary_key=True)
+    mid = db.Column(db.Integer, primary_key=True, autoincrement=True)
     mname = db.Column(db.String(200), unique=True)
     murl = db.Column(db.String(200))
     mtype = db.Column(db.Integer)   # 1: Classical, 2: Pop, 3: Yanni
@@ -49,7 +50,7 @@ class User(db.Model):
 class UserExp(db.Model):
     __tablename__ = 'user_exp'
     uid = db.Column(db.Integer, primary_key=True)
-    exp_num = db.Column(db.Integer)
+    exp_num = db.Column(db.Integer, primary_key=True)
     exp_start = db.Column(db.DateTime)
     exp_end = db.Column(db.DateTime)
     initial_v = db.Column(db.Integer)
@@ -63,8 +64,8 @@ class UserExp(db.Model):
 class UserMusic(db.Model):
     __tablename__ = 'user_music'
     uid = db.Column(db.Integer, primary_key=True)
-    exp_num = db.Column(db.Integer, primary_key=True, unique=True)
-    music_num = db.Column(db.Integer)
+    exp_num = db.Column(db.Integer, primary_key=True)
+    music_num = db.Column(db.Integer, primary_key=True)
     mid = db.Column(db.Integer)
     v = db.Column(db.Integer)
     a = db.Column(db.Integer)
@@ -75,16 +76,10 @@ class UserMusic(db.Model):
 
 class UserMemory(db.Model):
     __tablename__ = 'user_memory'
-    uid = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    exp_num = db.Column(db.Integer, primary_key=True, unique=True)
-    music_num = db.Column(db.Integer)
+    uid = db.Column(db.Integer, primary_key=True)
+    exp_num = db.Column(db.Integer, primary_key=True)
+    music_num = db.Column(db.Integer, primary_key=True)
     memory = db.Column(db.Text())
-
-    def __init__(self, uid, exp_num, music_num, memory):
-        self.uid = uid
-        self.exp_num = exp_num
-        self.music_num = music_num
-        self.memory = memory
 
 
 def convert(byte):
@@ -197,8 +192,15 @@ def start_experiment():
     new_experiment = UserExp(uid=user_id, exp_num=user_exp_num, exp_start=exp_start, initial_a=init_a, initial_v=init_v)
     db.session.add(new_experiment)
     db.session.commit()
-    music = Music.query.filter_by(mid=1).first()
-    return json.dumps({"mid": str(music.mid), "mname": str(music.mname), "murl": str(music.murl), "mtype": str(music.mtype)})
+    return music_recommend(1, 0, 0)
+
+@app.route('/memory', methods=['POST'])
+def update_memory():
+    data = convert(request.data)
+    user_id = data["uid"]
+    user_exp_num = data["exp_num"]
+    user_music_num = data["music_num"]
+    user_mem = data["memory"]
 
 
 def add_music(name, url, type, v, a):
@@ -210,4 +212,7 @@ def add_music(name, url, type, v, a):
 
 def music_recommend(order, v, a):
     music = Music.query.filter_by(mid=order).first()
-    return json.dumps({"mid":str(music.mid),"mname": str(music.mname),"mtype": str(music.mtype), "murl": str(music.murl)})
+    return json.dumps(
+        {"mid": str(music.mid), "mname": str(music.mname), "murl": str(music.murl), "mtype": str(music.mtype)})
+
+
