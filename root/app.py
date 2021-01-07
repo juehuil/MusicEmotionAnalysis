@@ -207,7 +207,7 @@ def update_memory():
     user_music_num = data["music_num"]
     user_mem = data["memory"]
 
-    pos = get_sentiment_result(user_mem)['items']
+    pos = get_sentiment_result(user_mem)['items'][0]
     return str(pos)
     neg = get_sentiment_result(user_mem)['items']['negative_prob']
     conf = get_sentiment_result(user_mem)['items']['confidence']
