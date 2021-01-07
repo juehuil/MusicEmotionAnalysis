@@ -80,6 +80,11 @@ class UserMemory(db.Model):
     exp_num = db.Column(db.Integer, primary_key=True)
     music_num = db.Column(db.Integer, primary_key=True)
     memory = db.Column(db.Text())
+    positive = db.Column(db.Float)
+    negative = db.Column(db.Float)
+    confidence = db.Column(db.Float)
+    sentiment = db.Column(db.Integer)
+
 
 
 def convert(byte):
@@ -201,7 +206,7 @@ def update_memory():
     user_exp_num = data["exp_num"]
     user_music_num = data["music_num"]
     user_mem = data["memory"]
-    result = str(get_sentiment_result(user_mem)['text'])
+    result = str(get_sentiment_result(user_mem)['items'])
     return result
     new_memory = UserMemory(uid=user_id, exp_num=user_exp_num, music_num=user_music_num, memory=result)
     db.session.add(new_memory)
