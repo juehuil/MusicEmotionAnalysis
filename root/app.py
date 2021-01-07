@@ -197,7 +197,7 @@ def start_experiment():
     new_experiment = UserExp(uid=user_id, exp_num=user_exp_num, exp_start=exp_start, initial_a=init_a, initial_v=init_v)
     db.session.add(new_experiment)
     db.session.commit()
-    music = Music.query.filter_by(mid=5).first()
+    music = Music.query.filter_by(mid=1).first()
     return json.dumps({"mid": str(music.mid), "mname": str(music.mname), "murl": str(music.murl), "mtype": str(music.mtype)})
 
 
