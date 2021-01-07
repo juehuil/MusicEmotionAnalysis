@@ -206,11 +206,12 @@ def update_memory():
     user_exp_num = data["exp_num"]
     user_music_num = data["music_num"]
     user_mem = data["memory"]
-    return user_mem
-    pos = str(get_sentiment_result(user_mem)['items']['positive_prob'])
-    neg = str(get_sentiment_result(user_mem)['items']['negative_prob'])
-    conf = str(get_sentiment_result(user_mem)['items']['confidence'])
-    sent = str(get_sentiment_result(user_mem)['items']['sentiment'])
+
+    pos = get_sentiment_result(user_mem)['items']['positive_prob']
+    #return pos
+    neg = get_sentiment_result(user_mem)['items']['negative_prob']
+    conf = get_sentiment_result(user_mem)['items']['confidence']
+    sent = get_sentiment_result(user_mem)['items']['sentiment']
 
     new_memory = UserMemory(uid=user_id, exp_num=user_exp_num, music_num=user_music_num, memory=user_mem, positive=pos, negative=neg, confidence=conf, sentiment=sent)
     db.session.add(new_memory)
