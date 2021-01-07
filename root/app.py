@@ -197,7 +197,7 @@ def start_experiment():
     new_experiment = UserExp(uid=user_id, exp_num=user_exp_num, exp_start=exp_start, initial_a=init_a, initial_v=init_v)
     db.session.add(new_experiment)
     db.session.commit()
-
+    return "Success!!"
 
 
 
