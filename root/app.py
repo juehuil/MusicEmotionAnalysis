@@ -208,7 +208,7 @@ def update_memory():
     user_mem = data["memory"]
 
     pos = get_sentiment_result(user_mem)['items']
-    return pos
+    return str(pos)
     neg = get_sentiment_result(user_mem)['items']['negative_prob']
     conf = get_sentiment_result(user_mem)['items']['confidence']
     sent = get_sentiment_result(user_mem)['items']['sentiment']
