@@ -198,8 +198,8 @@ def start_experiment():
     db.session.add(new_experiment)
     db.session.commit()
     music = Music.query.filter_by(mid=5).first()
-    return json.dumps(
-        {"mid": str(music.mid), "mname": str(music.mname), "murl": str(music.murl), "mtype": str(music.mtype)})
+    return "Yay!!"
+    #json.dumps({"mid": str(music.mid), "mname": str(music.mname), "murl": str(music.murl), "mtype": str(music.mtype)})
 
 
 def add_music(name, url, type, v, a):
