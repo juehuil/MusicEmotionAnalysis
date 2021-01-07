@@ -50,8 +50,8 @@ class UserExp(db.Model):
     __tablename__ = 'user_exp'
     uid = db.Column(db.Integer, primary_key=True)
     exp_num = db.Column(db.Integer, unique=True)
-    exp_start = db.Column(db.DateTime, unique=True)
-    exp_end = db.Column(db.DateTime, unique=True)
+    exp_start = db.Column(db.DateTime)
+    exp_end = db.Column(db.DateTime)
     initial_v = db.Column(db.Integer)
     initial_a = db.Column(db.Integer)
     final_v = db.Column(db.Integer)
@@ -156,13 +156,13 @@ def login():
     pw = data["upw"]
 
     user = User.query.filter_by(uname=name).first()
-    if (user is None):
+    if user is None:
         return "user name does not exist!"
-    elif (user.upw == pw):
+    elif user.upw == pw:
         user_exp_num = UserExp.query.filter_by(uid=user.uid).order_by(UserExp.exp_num.desc()).first()
         if user_exp_num is None:
             return json.dumps({"u_id":str(user.uid), "exp_num": 0, "start_date":str(user.ustart)})
-        #return str(user_exp_num.exp_num) + " " + str(user.ustart)
+        # return str(user_exp_num.exp_num) + " " + str(user.ustart)
         return json.dumps({"u_id":str(user.uid),"exp_num": user_exp_num.exp_num,"start_date":str(user.ustart)})
     else:
         return 'Incorrect Password!'
@@ -187,7 +187,18 @@ def music_playing():
 
 @app.route('/experiment', methods=['POST'])
 def start_experiment():
-    pass
+    data = convert(request.data)
+    user_id = data["uid"]
+    user_exp_num = data["exp_num"] + 1
+    init_v = data["initial_v"]
+    init_a = data["initial_a"]
+    exp_start = datetime.datetime.now()
+
+    new_experiment = UserExp(uid=user_id, exp_num=user_exp_num, exp_start=exp_start, initial_a=init_a, initial_v=init_v)
+    db.session.add(new_experiment)
+    db.session.commit()
+
+
 
 
 def add_music(name, url, type, v, a):
