@@ -199,8 +199,6 @@ def start_experiment():
     db.session.commit()
     return music_recommend(1, init_v, init_a)
 
-    return "Success!!"
-
 
 def add_music(name, url, type, v, a):
     new_music = Music(mname=name, murl=url, mtype=type)
