@@ -185,7 +185,7 @@ def register():
 def music_playing():
     pass
 
-@app.route('/experiment', methods=['POST'])
+@app.route('/experiment/start', methods=['POST'])
 def start_experiment():
     data = convert(request.data)
     user_id = data["uid"]
@@ -198,6 +198,27 @@ def start_experiment():
     db.session.add(new_experiment)
     db.session.commit()
     return music_recommend(1, 0, 0)
+
+@app.route('/experiment/end', methods=['POST'])
+def end_experiment():
+    data = convert(request.data)
+    user_id = data["uid"]
+    user_exp_num = data["exp_num"] + 1
+    f_v = data["final_v"]
+    f_a = data["final_a"]
+    eva = data["eval"]
+    rec = data["recommend_rate"]
+    exp_end = datetime.datetime.now()
+
+    exp = UserExp.query.filter_by(uid=user_id, exp_num=user_exp_num).first()
+    exp.exp_end = exp_end
+    exp.final_a = f_a
+    exp.final_v = f_v
+    exp.eval = eva
+    exp.recommend_rate = rec
+    db.session.commit()
+    return music_recommend(1, 0, 0)
+
 
 @app.route('/memory', methods=['POST'])
 def update_memory():
@@ -217,6 +238,8 @@ def update_memory():
     db.session.add(new_memory)
     db.session.commit()
     return user_mem
+
+
 
 def add_music(name, url, type, v, a):
     new_music = Music(mname=name, murl=url, mtype=type)

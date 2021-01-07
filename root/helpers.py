@@ -1,5 +1,7 @@
+from root.app import *
 import json
 import requests
+
 
 def get_sentiment_result(text):
     """
@@ -37,6 +39,13 @@ def get_sentiment_result(text):
     headers = {'Content-Type': 'application/json; charset=UTF-8'}
     response = requests.post(url=url, params=params, data=payload, headers=headers).json()
     return response
+
+
+def add_music(name, url, type, v, a):
+    new_music = Music(mname=name, murl=url, mtype=type)
+    db.session.add(new_music)
+    db.session.commit()
+    print("success")
 
 if __name__ == '__main__':
     print(get_sentiment_result('白日放歌须纵酒，青春作伴好还乡。'))
