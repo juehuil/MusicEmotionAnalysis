@@ -181,8 +181,8 @@ def login():
                 exp_num = user_exp_num.exp_num-1
                 db.session.delete(user_exp_num)
                 db.session.commit()
-                return json.dumps({"u_id": str(user.uid), "exp_num": exp_num, "music_num": 0, "start_date": str(user.ustart)})
-        return json.dumps({"u_id": str(user.uid), "exp_num": user_exp_num.exp_num, "music_num": 0, "start_date": str(user.ustart)})
+                return json.dumps({"u_id": str(user.uid), "exp_num": exp_num, "music_num": -1, "start_date": str(user.ustart)})
+        return json.dumps({"u_id": str(user.uid), "exp_num": user_exp_num.exp_num, "music_num": -2, "start_date": str(user.ustart)})
     else:
         return 'Incorrect Password!'
 
