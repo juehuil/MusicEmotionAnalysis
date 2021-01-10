@@ -45,7 +45,7 @@ class User(db.Model):
     uname = db.Column(db.String(200), unique=True)
     upw = db.Column(db.String(200))
     utype = db.Column(db.Integer)  # 0: non, 0x100: Classical Fan, 0x010: pop Fan, 0x001: Yanni Fan
-    ustart = db.Column(db.Date)  # start date of the first experiment
+    ustart = db.Column(db.DateTime)  # start date of the first experiment
 
 
 class UserExp(db.Model):
@@ -181,8 +181,8 @@ def login():
                 exp_num = user_exp_num.exp_num-1
                 db.session.delete(user_exp_num)
                 db.session.commit()
-                return json.dumps({"u_id": str(user.uid), "exp_num": exp_num, "music_num": -1, "start_date": str(user.ustart)})
-        return json.dumps({"u_id": str(user.uid), "exp_num": user_exp_num.exp_num, "music_num": -2, "start_date": str(user.ustart)})
+                return json.dumps({"u_id": str(user.uid), "exp_num": exp_num, "music_num": 0, "start_date": str(user.ustart)})
+        return json.dumps({"u_id": str(user.uid), "exp_num": user_exp_num.exp_num, "music_num": 0, "start_date": str(user.ustart)})
     else:
         return 'Incorrect Password!'
 
@@ -200,6 +200,12 @@ def start_experiment():
     init_v = data["initial_v"]
     init_a = data["initial_a"]
     exp_start = datetime.datetime.now()
+
+
+    if user_exp_num == 1:
+        user = User.query.filter_by(uid=user_id).first()
+        user.ustart = exp_start
+        db.session.commit()
 
     new_experiment = UserExp(uid=user_id, exp_num=user_exp_num, exp_start=exp_start, initial_a=init_a, initial_v=init_v)
     db.session.add(new_experiment)
