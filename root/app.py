@@ -246,6 +246,8 @@ def update_music():
 
     if user_music_num < 4:
         return music_recommend(user_music_num, 0, 0)
+    else:
+        return "done!"
 
 
 @app.route('/memory', methods=['POST'])
