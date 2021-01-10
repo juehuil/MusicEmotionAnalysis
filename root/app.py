@@ -196,7 +196,7 @@ def music_playing():
 def start_experiment():
     data = convert(request.data)
     user_id = data["uid"]
-    user_exp_num = data["exp_num"] + 1
+    user_exp_num = data["exp_num"]
     init_v = data["initial_v"]
     init_a = data["initial_a"]
     exp_start = datetime.datetime.now()
