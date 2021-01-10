@@ -174,11 +174,11 @@ def login():
         if user.exp_end is None:
             user_music_num = UserMusic.query.filter_by(uid=user.uid, exp_num=user_exp_num.exp_num).order_by(UserMusic.music_num.desc()).first()
             exp_past_time = datetime.datetime.now()-user_exp_num.exp_start
-            duration = int(exp_past_time.total_seconds()/3600)
+            #duration = int(exp_past_time.total_seconds()/3600)
             #if user_music_num is not None and duration < 3:
             #    return json.dumps({"u_id": str(user.uid), "exp_num": user_exp_num.exp_num, "music_num": user_music_num.music_num,"start_date": str(user.ustart)})
             #else:
-            #    exp_num = user_exp_num.exp_num-1
+            exp_num = user_exp_num.exp_num-1
             #    db.session.delete(user_exp_num)
             #    db.session.commit()
             return json.dumps({"u_id": str(user.uid), "exp_num": exp_num, "music_num": 0, "start_date": str(user.ustart)})
