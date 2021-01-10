@@ -24,7 +24,6 @@ else:
                                             'a7ad29df34f4f928f1116c6103cd35142@ec2-75-101-212-64.compute-1' \
                                             '.amazonaws.com:5432/dfirkg7gdep2ks'
 
-
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -35,17 +34,19 @@ class Music(db.Model):
     mid = db.Column(db.Integer, primary_key=True, autoincrement=True)
     mname = db.Column(db.String(200), unique=True)
     murl = db.Column(db.String(200))
-    mtype = db.Column(db.Integer)   # 1: Classical, 2: Pop, 3: Yanni
+    mtype = db.Column(db.Integer)  # 1: Classical, 2: Pop, 3: Yanni
     mv = db.Column(db.Integer)
     ma = db.Column(db.Integer)
+
 
 class User(db.Model):
     __tablename__ = 'user_info'
     uid = db.Column(db.Integer, primary_key=True, autoincrement=True)
     uname = db.Column(db.String(200), unique=True)
     upw = db.Column(db.String(200))
-    utype = db.Column(db.Integer)       # 0: non, 0x100: Classical Fan, 0x010: pop Fan, 0x001: Yanni Fan
-    ustart = db.Column(db.Date)         # start date of the first experiment
+    utype = db.Column(db.Integer)  # 0: non, 0x100: Classical Fan, 0x010: pop Fan, 0x001: Yanni Fan
+    ustart = db.Column(db.Date)  # start date of the first experiment
+
 
 class UserExp(db.Model):
     __tablename__ = 'user_exp'
@@ -73,7 +74,6 @@ class UserMusic(db.Model):
     familiarity = db.Column(db.Integer)
 
 
-
 class UserMemory(db.Model):
     __tablename__ = 'user_memory'
     uid = db.Column(db.Integer, primary_key=True)
@@ -86,10 +86,10 @@ class UserMemory(db.Model):
     sentiment = db.Column(db.Integer)
 
 
-
 def convert(byte):
     data = literal_eval(byte.decode('utf-8'))
     return data
+
 
 """
 @app.route('/upload', methods=['POST'])
@@ -130,23 +130,31 @@ def create_exp():
     return exp_num + 1
 """
 
+
 @app.route('/')
 def index():
-    ### Test Login
-    name = "jessy"
-    pw = "12345689"
+    return "Success!"
 
-    user = User.query.filter_by(uname=name).first()
-    if (user is None):
-        return "user name does not exist!"
-    elif (user.upw == "123456789"):
-        return 'You are logged in'
-    else:
-        return 'Incorrect Password!'
 
 @app.route('/<name>')
 def hello(name):
     return 'it works! {0}'.format(name)
+
+
+@app.route('/register', methods=['POST'])
+def register():
+    data = convert(request.data)
+    name = data["uname"]
+    pw = data["upw"]
+    user_type = data["utype"]
+    user = User.query.filter_by(uname=name).first()
+    if user is not None:
+        return "User Already Exist!"
+    new_user = User(uname=name, upw=pw, utype=user_type)
+    db.session.add(new_user)
+    db.session.commit()
+    return new_user.uname + "!!"
+
 
 @app.route('/login', methods=['POST'])
 @cross_origin()
@@ -161,29 +169,28 @@ def login():
     elif user.upw == pw:
         user_exp_num = UserExp.query.filter_by(uid=user.uid).order_by(UserExp.exp_num.desc()).first()
         if user_exp_num is None:
-            return json.dumps({"u_id":str(user.uid), "exp_num": 0, "start_date":str(user.ustart)})
+            return json.dumps({"u_id": str(user.uid), "exp_num": 0, "music_num": -1, "start_date": str(user.ustart)})
         # return str(user_exp_num.exp_num) + " " + str(user.ustart)
-        return json.dumps({"u_id":str(user.uid),"exp_num": user_exp_num.exp_num,"start_date":str(user.ustart)})
+        if user.exp_end is None:
+            user_music_num = UserMusic.query.filter_by(uid=user.uid, exp_num=user_exp_num.exp_num).order_by(UserMusic.music_num.desc()).first()
+            exp_past_time = datetime.datetime.now()-user_exp_num.exp_start
+            duration = exp_past_time.total_seconds()/3600
+            if user_music_num is None and duration < 3:
+                return json.dumps({"u_id": str(user.uid), "exp_num": user_exp_num.exp_num, "music_num": user_music_num.music_num,"start_date": str(user.ustart)})
+            else:
+                exp_num = user_exp_num.exp_num-1
+                db.session.delete(user_exp_num)
+                db.session.commit()
+                return json.dumps({"u_id": str(user.uid), "exp_num": exp_num, "music_num": 0, "start_date": str(user.ustart)})
+        return json.dumps({"u_id": str(user.uid), "exp_num": user_exp_num.exp_num, "music_num": -1, "start_date": str(user.ustart)})
     else:
         return 'Incorrect Password!'
 
-@app.route('/register', methods=['POST'])
-def register():
-    data = convert(request.data)
-    name = data["uname"]
-    pw = data["upw"]
-    user_type = data["utype"]
-    user = User.query.filter_by(uname=name).first()
-    if user != None:
-        return "User Already Exist!"
-    new_user = User(uname=name, upw=pw, utype=user_type)
-    db.session.add(new_user)
-    db.session.commit()
-    return new_user.uname + "!!"
 
 @app.route('/music', methods=['POST'])
 def music_playing():
     pass
+
 
 @app.route('/experiment/start', methods=['POST'])
 def start_experiment():
@@ -199,14 +206,15 @@ def start_experiment():
     db.session.commit()
     return music_recommend(1, 0, 0)
 
+
 @app.route('/experiment/end', methods=['POST'])
 def end_experiment():
     data = convert(request.data)
     user_id = data["uid"]
-    user_exp_num = data["exp_num"] + 1
+    user_exp_num = data["exp_num"]
     f_v = data["final_v"]
     f_a = data["final_a"]
-    eva = data["eval"]
+    eva = data["evaluate"]
     rec = data["recommend_rate"]
     exp_end = datetime.datetime.now()
 
@@ -217,7 +225,27 @@ def end_experiment():
     exp.eval = eva
     exp.recommend_rate = rec
     db.session.commit()
-    return music_recommend(1, 0, 0)
+    return "Successfully ended experiment!"
+
+
+@app.route('/music/update', methods=['POST'])
+def update_music():
+    data = convert(request.data)
+    user_id = data["uid"]
+    user_exp_num = data["exp_num"]
+    user_music_num = data["music_num"]
+    music_id = data["mid"]
+    valance = data["v"]
+    arousal = data["a"]
+    user_score = data["score"]
+    user_fam = data["familiarity"]
+
+    new_user_music = UserMusic(uid=user_id, exp_num=user_exp_num, music_num=user_music_num, mid=music_id, v=valance, a=arousal, score=user_score, familiarity=user_fam)
+    db.session.add(new_user_music)
+    db.session.commit()
+
+    if user_music_num < 4:
+        return music_recommend(user_music_num, 0, 0)
 
 
 @app.route('/memory', methods=['POST'])
@@ -234,15 +262,15 @@ def update_memory():
     sent = get_sentiment_result(user_mem)['items'][0]['sentiment']
     # return str(pos) + " " + str(neg) + " " + str(conf) + " " + str(sent)
 
-    new_memory = UserMemory(uid=user_id, exp_num=user_exp_num, music_num=user_music_num, memory=user_mem, positive=pos, negative=neg, confidence=conf, sentiment=sent)
+    new_memory = UserMemory(uid=user_id, exp_num=user_exp_num, music_num=user_music_num, memory=user_mem, positive=pos,
+                            negative=neg, confidence=conf, sentiment=sent)
     db.session.add(new_memory)
     db.session.commit()
     return user_mem
 
 
-
-def add_music(name, url, type, v, a):
-    new_music = Music(mname=name, murl=url, mtype=type)
+def add_music(name, url, music_type, v, a):
+    new_music = Music(mname=name, murl=url, mtype=music_type)
     db.session.add(new_music)
     db.session.commit()
     print("success")
