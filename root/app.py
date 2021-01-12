@@ -209,7 +209,7 @@ def start_experiment():
     new_experiment = UserExp(uid=user_id, exp_num=user_exp_num, exp_start=exp_start, initial_a=init_a, initial_v=init_v)
     db.session.add(new_experiment)
     db.session.commit()
-    return music_recommend(1, 0, 0)
+    return music_recommend(0, 0, 0)
 
 
 @app.route('/experiment/end', methods=['POST'])
@@ -249,7 +249,7 @@ def update_music():
     db.session.add(new_user_music)
     db.session.commit()
 
-    if user_music_num < 5:
+    if user_music_num < 4:
         return music_recommend(user_music_num, 0, 0)
     else:
         return "done!"
@@ -284,7 +284,7 @@ def add_music(name, url, music_type, v, a):
 
 
 def music_recommend(order, v, a):
-    music = Music.query.filter_by(mid=order).first()
+    music = Music.query.filter_by(mid=order+1).first()
     return json.dumps(
         {"mid": str(music.mid), "mname": str(music.mname), "murl": str(music.murl), "mtype": str(music.mtype)})
 
