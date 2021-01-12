@@ -201,7 +201,6 @@ def start_experiment():
     init_a = data["initial_a"]
     exp_start = datetime.datetime.now()
 
-
     if user_exp_num == 1:
         user = User.query.filter_by(uid=user_id).first()
         user.ustart = exp_start
@@ -250,7 +249,7 @@ def update_music():
     db.session.add(new_user_music)
     db.session.commit()
 
-    if user_music_num < 4:
+    if user_music_num < 5:
         return music_recommend(user_music_num, 0, 0)
     else:
         return "done!"
