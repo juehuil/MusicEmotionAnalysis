@@ -302,7 +302,7 @@ def add_music(name, url, music_type, v, a):
 
 def music_recommend(order, v, a):
     music = Music.query.filter_by(mid=order+1).first()
-    return json.dumps({"music" : list(music.mid, music.mname, music.murl, music.mtype)})
+    return json.dumps({"mid": music.mid, "mname": music.mname, "murl": music.murl, "mtype": music.mtype})
 
 
 def convert_music(mid, mname, murl, mtype):
