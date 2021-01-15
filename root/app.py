@@ -45,6 +45,11 @@ class User(db.Model):
     uname = db.Column(db.String(200), unique=True)
     upw = db.Column(db.String(200))
     utype = db.Column(db.Integer)  # 0: non, 0x100: Classical Fan, 0x010: pop Fan, 0x001: Yanni Fan
+    profession = db.Column(db.String(200))
+    age = db.Column(db.Integer)             # range
+    gender = db.Column(db.Integer)          # 0: male, 1: female, 2: other, 3: prefer not to state
+    expertise = db.Column(db.Integer)       # 1 - 5: 1 not familiar, 5 expert
+    love_level = db.Column(db.Integer)      # 1 - 5: 1 lowest, 5 highest
     ustart = db.Column(db.DateTime)  # start date of the first experiment
 
 
@@ -147,10 +152,17 @@ def register():
     name = data["uname"]
     pw = data["upw"]
     user_type = data["utype"]
+    profession = data["profession"]
+    age = data["age"]
+    gender = data["gender"]
+    expertise = data["expertise"]
+    love_level = data["love_level"]
+
     user = User.query.filter_by(uname=name).first()
     if user is not None:
         return "User Already Exist!"
-    new_user = User(uname=name, upw=pw, utype=user_type)
+    new_user = User(uname=name, upw=pw, utype=user_type, profession=profession, age=age, gender=gender, expertise=expertise,
+                    love_level=love_level)
     db.session.add(new_user)
     db.session.commit()
     return new_user.uname + "!!"
@@ -178,7 +190,9 @@ def login():
             if user_music_num is not None and duration < 3:
                 v = user_music_num.v
                 a = user_music_num.a
-                return json.dumps({"u_id": str(user.uid), "exp_num": user_exp_num.exp_num, "music_num": user_music_num.music_num,"start_date": str(user.ustart),"v":v,"a":a})
+                result = music_recommend(user_music_num.music_num, v, a)
+
+                return json.dumps({"u_id": str(user.uid), "exp_num": user_exp_num.exp_num, "music_num": user_music_num.music_num,"start_date": str(user.ustart),"v": v,"a": a,"mid": result[0], "mname": result[1], "murl": result[2], "mtype": result[3]})
             else:
                 exp_num = user_exp_num.exp_num-1
                 db.session.delete(user_exp_num)
@@ -211,7 +225,8 @@ def start_experiment():
     new_experiment = UserExp(uid=user_id, exp_num=user_exp_num, exp_start=exp_start, initial_a=init_a, initial_v=init_v)
     db.session.add(new_experiment)
     db.session.commit()
-    return music_recommend(0, 0, 0)
+    result = music_recommend(0, 0, 0)
+    return convert_music(result[0], result[1], result[2], result[3])
 
 
 @app.route('/experiment/end', methods=['POST'])
@@ -252,7 +267,8 @@ def update_music():
     db.session.commit()
 
     if user_music_num < 4:
-        return music_recommend(user_music_num, 0, 0)
+        result = music_recommend(user_music_num, 0, 0)
+        return convert_music(result[0], result[1], result[2], result[3])
     else:
         return "done!"
 
@@ -287,6 +303,11 @@ def add_music(name, url, music_type, v, a):
 
 def music_recommend(order, v, a):
     music = Music.query.filter_by(mid=order+1).first()
+    return [music.mid, music.mname, music.murl, music.mtype]
+
+
+def convert_music(mid, mname, murl, mtype):
     return json.dumps(
-        {"mid": str(music.mid), "mname": str(music.mname), "murl": str(music.murl), "mtype": str(music.mtype)})
+        {"mid": mid, "mname": mname, "murl": murl, "mtype": mtype})
+
 
