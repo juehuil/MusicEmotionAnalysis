@@ -190,8 +190,8 @@ def login():
             if user_music_num is not None and duration < 3:
                 v = user_music_num.v
                 a = user_music_num.a
-                # result = music_recommend(0, v, a)
-                return json.dumps({"u_id": str(user.uid), "exp_num": user_exp_num.exp_num, "music_num": user_music_num.music_num,"start_date": str(user.ustart)}) #"v": v, "a": a, "mid": result[0], "mname": result[1], "murl": result[2], "mtype": result[3]})
+                result = music_recommend(0, v, a)
+                return json.dumps({"u_id": str(user.uid), "exp_num": user_exp_num.exp_num, "music_num": user_music_num.music_num,"start_date": str(user.ustart), "v": v, "a": a, "mid": result[0], "mname": result[1], "murl": result[2], "mtype": result[3]})
             else:
                 exp_num = user_exp_num.exp_num-1
                 db.session.delete(user_exp_num)
@@ -302,7 +302,7 @@ def add_music(name, url, music_type, v, a):
 
 def music_recommend(order, v, a):
     music = Music.query.filter_by(mid=order+1).first()
-    return [music.mid, music.mname, music.murl, music.mtype]
+    return list(music.mid, music.mname, music.murl, music.mtype)
 
 
 def convert_music(mid, mname, murl, mtype):
