@@ -224,7 +224,7 @@ def start_experiment():
     new_experiment = UserExp(uid=user_id, exp_num=user_exp_num, exp_start=exp_start, initial_a=init_a, initial_v=init_v)
     db.session.add(new_experiment)
     db.session.commit()
-    return music_recommend(0, 0, 0)
+    result = music_recommend(0, 0, 0)
     return convert_music(result[0], result[1], result[2], result[3])
 
 
