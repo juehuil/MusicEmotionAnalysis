@@ -224,7 +224,7 @@ def start_experiment():
     new_experiment = UserExp(uid=user_id, exp_num=user_exp_num, exp_start=exp_start, initial_a=init_a, initial_v=init_v)
     db.session.add(new_experiment)
     db.session.commit()
-    result = music_recommend(0, 0, 0)
+    return music_recommend(0, 0, 0)
     return convert_music(result[0], result[1], result[2], result[3])
 
 
@@ -302,7 +302,7 @@ def add_music(name, url, music_type, v, a):
 
 def music_recommend(order, v, a):
     music = Music.query.filter_by(mid=order+1).first()
-    return list(music.mid, music.mname, music.murl, music.mtype)
+    return json.dumps({"music" : list(music.mid, music.mname, music.murl, music.mtype)})
 
 
 def convert_music(mid, mname, murl, mtype):
