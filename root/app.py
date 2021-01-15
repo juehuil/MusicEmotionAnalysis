@@ -176,7 +176,9 @@ def login():
             exp_past_time = datetime.datetime.now()-user_exp_num.exp_start
             duration = int(exp_past_time.total_seconds()/3600)
             if user_music_num is not None and duration < 3:
-                return json.dumps({"u_id": str(user.uid), "exp_num": user_exp_num.exp_num, "music_num": user_music_num.music_num,"start_date": str(user.ustart)})
+                v = user_music_num.v
+                a = user_music_num.a
+                return json.dumps({"u_id": str(user.uid), "exp_num": user_exp_num.exp_num, "music_num": user_music_num.music_num,"start_date": str(user.ustart),"v":v,"a":a})
             else:
                 exp_num = user_exp_num.exp_num-1
                 db.session.delete(user_exp_num)
