@@ -322,7 +322,7 @@ def music_recommend(exp_num, music_num, utype, v, a):
             pass
 
     music = Music.query.filter_by(mid=mid).first()
-    print(music.mid + " " + music.mname + " " + music.murl + " " + music.mtype)
+    print(str(music.mid) + " " + music.mname + " " + music.murl + " " + str(music.mtype))
     return [music.mid, music.mname, music.murl, music.mtype]
 
 
