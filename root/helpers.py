@@ -42,7 +42,7 @@ def get_sentiment_result(text):
 
 
 def add_music(name, url, type, v, a):
-    new_music = Music(mname=name, murl=url, mtype=type)
+    new_music = Music(mname=name, murl=url, mtype=type, mv=v, ma=a)
     db.session.add(new_music)
     db.session.commit()
     print("success")
