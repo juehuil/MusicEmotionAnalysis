@@ -7,7 +7,7 @@ from flask_cors import CORS, cross_origin
 from root.helpers import *
 import datetime
 import json
-import numpy as np
+import numpy
 
 app = Flask(__name__)
 app.debug = True
