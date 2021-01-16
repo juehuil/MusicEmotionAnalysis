@@ -361,7 +361,7 @@ def music_recommend(exp_num, music_num, uid, v, a):
                 mtype = 1
             elif rand_num < scores[0] + scores[1]:
                 mtype = 2
-
+            print(str(rand_num) + " " + str(mtype) + " " + str(total))
             music = Music.query.filter((Music.mtype == mtype) & (Music.mv > v)).order_by(Music.mv.asc()).all()
             print("music" + str(music))
             if not music:
