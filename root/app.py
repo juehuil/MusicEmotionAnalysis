@@ -7,6 +7,7 @@ from flask_cors import CORS, cross_origin
 from root.helpers import *
 import datetime
 import json
+import numpy as np
 
 app = Flask(__name__)
 app.debug = True
@@ -291,13 +292,6 @@ def update_memory():
     db.session.add(new_memory)
     db.session.commit()
     return user_mem
-
-
-def add_music(name, url, music_type, v, a):
-    new_music = Music(mname=name, murl=url, mtype=music_type)
-    db.session.add(new_music)
-    db.session.commit()
-    print("success")
 
 
 def music_recommend(order, v, a):

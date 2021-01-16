@@ -47,6 +47,14 @@ def add_music(name, url, type, v, a):
     db.session.commit()
     print("success")
 
+def read_musics(file_name):
+    f = open(file_name, "r")
+    for x in f:
+        print(x)
+
+
+
+
 if __name__ == '__main__':
     print(get_sentiment_result('白日放歌须纵酒，青春作伴好还乡。'))
     print(get_sentiment_result('思悠悠，恨悠悠，恨到归时方始休。'))
