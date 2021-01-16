@@ -308,7 +308,7 @@ def music_recommend(exp_num, music_num, utype, v, a):
             arousal = (a - music[0].ma)**2
             mid = music[0].mid
             for i in music:
-                if i.mv != valence:
+                if i.mv > valence + 1:
                     break
                 temp_a = (a-i.ma)**2
                 if temp_a < arousal:
