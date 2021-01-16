@@ -299,9 +299,13 @@ def music_recommend(exp_num, music_num, utype, v, a):
     if exp_num <= 2:
         if music_num == 1:
             music = Music.query.filter((Music.mtype == utype) & (Music.mv > v)).order_by(Music.mv.asc()).all()
+            print("music" + str(music))
             if music is []:
+
                 music = Music.query.filter((Music.mtype == utype) & (Music.mv <= v)).order_by(
                     Music.mv.desc()).all()
+                print("music" + str(music))
+
             valence = music[0].mv
             arousal = (a - music[0].ma)**2
             mid = music[0].mid
