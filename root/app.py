@@ -299,7 +299,7 @@ def music_recommend(exp_num, music_num, utype, v, a):
     if exp_num <= 2:
         if music_num == 1:
             music = Music.query.filter((Music.mtype == utype) & (Music.mv > v)).order_by(Music.mv.asc()).all()
-            if music is None:
+            if music is []:
                 music = Music.query.filter((Music.mtype == utype) & (Music.mv <= v)).order_by(
                     Music.mv.desc()).all()
             valence = music[0].mv
