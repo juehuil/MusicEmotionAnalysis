@@ -323,7 +323,7 @@ def music_recommend(exp_num, music_num, uid, v, a):
             v = user_mus.v
             a = user_mus.a
             last_mid = user_mus.mid
-            if user_mem.memory:
+            if user_mem:
                 v = v + (user_mem.positive-0.5) * 5
             music = Music.query.filter(Music.mv > v).order_by(Music.mv.asc()).all()
             print("music" + str(music))
