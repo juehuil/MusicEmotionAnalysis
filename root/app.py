@@ -298,7 +298,7 @@ def music_recommend(exp_num, music_num, utype, v, a):
     mid = 0
     if exp_num <= 2:
         if music_num == 1:
-            music = Music.query.filter((Music.mtype==utype)&(Music.mv>v)).order_by(UserExp.exp_num.asc()).all()
+            music = Music.query.filter((Music.mtype == utype) & (Music.mv > v)).order_by(Music.ma.asc()).all()
             if music is None:
                 music = Music.query.filter((Music.mtype == utype) & (Music.mv <= v)).order_by(
                     UserExp.exp_num.desc()).all()
