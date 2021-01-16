@@ -353,7 +353,7 @@ def music_recommend(exp_num, music_num, uid, v, a):
             for i in range(0, 3):
                 scores[i] = float(scores[i])/count[i]
                 scores[i] = int(scores[i]*10)
-            print(scores[0] + " " + scores[1] + " " + scores[2])
+            print(str(scores[0]) + " " + str(scores[1]) + " " + str(scores[2]))
             total = scores[0] + scores[1] + scores[2]
             rand_num = random.randint(0, total)
             mtype = 3
