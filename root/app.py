@@ -350,8 +350,10 @@ def music_recommend(exp_num, music_num, uid, v, a):
                 mus = Music.query.filter_by(mid=i.mid).first()
                 count[mus.mtype-1] += 1
                 scores[mus.mtype-1] += i.score
-            scores = float(scores)/count
-            scores = int(scores*10)
+            for i in range(0, 3):
+                scores[i] = float(scores[i])/count[i]
+                scores[i] = int(scores[i]*10)
+            print(scores[0] + " " + scores[1] + " " + scores[2])
             total = scores[0] + scores[1] + scores[2]
             rand_num = random.randint(0, total)
             mtype = 3
