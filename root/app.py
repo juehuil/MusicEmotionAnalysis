@@ -347,7 +347,7 @@ def music_recommend(exp_num, music_num, uid, v, a):
             scores = [0, 0, 0]
             count = [0, 0, 0]
             for i in user_mus:
-                mus = Music.query.filter(mid=i.mid).first()
+                mus = Music.query.filter_by(mid=i.mid).first()
                 count[mus.mtype-1] += 1
                 scores[mus.mtype-1] += i.score
             scores = float(scores)/count
