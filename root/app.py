@@ -303,13 +303,12 @@ def music_recommend(exp_num, music_num, utype, v, a):
             if not music:
                 music = Music.query.filter((Music.mtype == utype) & (Music.mv <= v)).order_by(
                     Music.mv.desc()).all()
-                print("music" + str(music))
 
             valence = music[0].mv
             arousal = (a - music[0].ma)**2
             mid = music[0].mid
             for i in music:
-                if i.mv > valence + 1:
+                if i.mv > valence + 1 or i.mv < valence - 1:
                     break
                 temp_a = (a-i.ma)**2
                 if temp_a < arousal:
