@@ -294,8 +294,35 @@ def update_memory():
     return user_mem
 
 
-def music_recommend(order, v, a):
-    music = Music.query.filter_by(mid=order+1).first()
+def music_recommend(exp_num, music_num, utype, v, a):
+    mid = 0
+    if exp_num <= 2:
+        if music_num == 1:
+            music = Music.query.filter((Music.mtype==utype)&(Music.mv>v)).order_by(UserExp.exp_num.asc()).all()
+            if music is None:
+                music = Music.query.filter((Music.mtype == utype) & (Music.mv <= v)).order_by(
+                    UserExp.exp_num.desc()).all()
+            valance = music[0].mv
+            arousal = (a - music[0].ma)**2
+            mid = music[0].mid
+            for i in music:
+                if i.mv != valance:
+                    break
+                temp_a = (a-i.ma)**2
+                if temp_a < arousal:
+                    arousal = temp_a
+                    mid = i.mid
+
+        else:
+            pass
+    else:
+        if music_num == 1:
+            pass
+        else:
+            pass
+
+    music = Music.query.filter_by(mid=mid).first()
+    print(music.mid + " " + music.mname + " " + music.murl + " " + music.mtype)
     return [music.mid, music.mname, music.murl, music.mtype]
 
 
