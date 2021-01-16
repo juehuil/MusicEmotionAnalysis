@@ -57,7 +57,7 @@ def read_musics(file_name):
         type = int(chunks[2])
         v = int(chunks[3])
         a = int(chunks[4])
-        print(name + " " + url + " " + type + " " + v + " " + a)
+        print(name + " " + url + " " + str(type) + " " + str(v) + " " + str(a))
         add_music(name, url, type, v, a)
 
 
