@@ -50,7 +50,16 @@ def add_music(name, url, type, v, a):
 def read_musics(file_name):
     f = open(file_name, "r")
     for x in f:
-        print(x)
+        x = x.strip('\n')
+        chunks = x.split(',')
+        name = chunks[0]
+        url = chunks[1]
+        type = int(chunks[2])
+        v = int(chunks[3])
+        a = int(chunks[4])
+        print(name + " " + url + " " + type + " " + v + " " + a)
+        add_music(name, url, type, v, a)
+
 
 
 
