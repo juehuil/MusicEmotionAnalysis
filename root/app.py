@@ -294,7 +294,9 @@ def update_memory():
     return user_mem
 
 
-def music_recommend(exp_num, music_num, utype, v, a):
+def music_recommend(exp_num, music_num, uid, v, a):
+    user = User.query.filter_by(uid=uid).first()
+    utype = user.utype
     mid = 0
     if exp_num <= 2:
         if music_num == 1:
@@ -316,7 +318,28 @@ def music_recommend(exp_num, music_num, utype, v, a):
                     mid = i.mid
 
         else:
-            pass
+            user_mem = UserMemory.query.filter_by(uid=uid, exp_num=exp_num, music_num=music_num-1).first()
+            user_mus = UserMusic.query.filter_by(uid=uid, exp_num=exp_num, music_num=music_num-1).first()
+            v = user_mus.v
+            a = user_mus.a
+            last_mid = user_mus.mid
+            if user_mem.memory:
+                v = v + (user_mem.positive-0.5) * 5
+            music = Music.query.filter(Music.mv > v).order_by(Music.mv.asc()).all()
+            print("music" + str(music))
+            if not music:
+                music = Music.query.filter(Music.mv <= v).order_by(Music.mv.desc()).all()
+
+            valence = music[0].mv
+            arousal = (a - music[0].ma) ** 2
+            mid = music[0].mid
+            for i in music:
+                if i.mv > valence + 1 or i.mv < valence - 1:
+                    break
+                temp_a = (a - i.ma) ** 2
+                if temp_a < arousal:
+                    arousal = temp_a
+                    mid = i.mid
     else:
         if music_num == 1:
             pass
