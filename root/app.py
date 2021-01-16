@@ -8,6 +8,7 @@ from root.helpers import *
 import datetime
 import json
 import numpy
+import random
 
 app = Flask(__name__)
 app.debug = True
@@ -342,7 +343,40 @@ def music_recommend(exp_num, music_num, uid, v, a):
                     mid = i.mid
     else:
         if music_num == 1:
-            pass
+            user_mus = UserMusic.query.filter_by(uid=uid).all()
+            scores = [0, 0, 0]
+            count = [0, 0, 0]
+            for i in user_mus:
+                mus = Music.query.filter(mid=i.mid).first()
+                count[mus.mtype-1] += 1
+                scores[mus.mtype-1] += i.score
+            scores = float(scores)/count
+            scores = int(scores*10)
+            total = scores[0] + scores[1] + scores[2]
+            rand_num = random.randint(0, total)
+            mtype = 3
+            if rand_num < scores[0]:
+                mtype = 1
+            elif rand_num < scores[0] + scores[1]:
+                mtype = 2
+
+            music = Music.query.filter((Music.mtype == mtype) & (Music.mv > v)).order_by(Music.mv.asc()).all()
+            print("music" + str(music))
+            if not music:
+                music = Music.query.filter((Music.mtype == mtype) & (Music.mv <= v)).order_by(
+                    Music.mv.desc()).all()
+
+            valence = music[0].mv
+            arousal = (a - music[0].ma)**2
+            mid = music[0].mid
+            for i in music:
+                if i.mv > valence + 1 or i.mv < valence - 1:
+                    break
+                temp_a = (a-i.ma)**2
+                if temp_a < arousal:
+                    arousal = temp_a
+                    mid = i.mid
+
         else:
             pass
 
