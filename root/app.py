@@ -191,7 +191,7 @@ def login():
             if user_music_num is not None and duration < 3:
                 v = user_music_num.v
                 a = user_music_num.a
-                result = music_recommend(0, v, a)
+                result = music_recommend(user_exp_num.exp_num, user_music_num.music_num+1, user.uid, v, a)
                 return json.dumps({"u_id": str(user.uid), "exp_num": user_exp_num.exp_num, "music_num": user_music_num.music_num,"start_date": str(user.ustart), "v": v, "a": a, "mid": result[0], "mname": result[1], "murl": result[2], "mtype": result[3]})
             else:
                 exp_num = user_exp_num.exp_num-1
@@ -225,7 +225,7 @@ def start_experiment():
     new_experiment = UserExp(uid=user_id, exp_num=user_exp_num, exp_start=exp_start, initial_a=init_a, initial_v=init_v)
     db.session.add(new_experiment)
     db.session.commit()
-    result = music_recommend(0, 0, 0)
+    result = music_recommend(user_exp_num, 1, user_id, init_v, init_a)
     return convert_music(result[0], result[1], result[2], result[3])
 
 
@@ -267,7 +267,7 @@ def update_music():
     db.session.commit()
 
     if user_music_num < 4:
-        result = music_recommend(user_music_num, 0, 0)
+        result = music_recommend(user_exp_num, user_music_num+1, user_id, valance, arousal)
         return convert_music(result[0], result[1], result[2], result[3])
     else:
         return "done!"
