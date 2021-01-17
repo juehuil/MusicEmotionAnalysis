@@ -228,8 +228,10 @@ def update_music():
     user_fam = data["familiarity"]
 
     if user_exp_num >= 3:
-        (pv, pa) = get_new_va(user_exp_num, user_music_num, user_id, music_id)
-
+        result = get_new_va(user_exp_num, user_music_num, user_id, music_id)
+        pv = result[0]
+        pa = result[1]
+    return "pv " + str(pv) + "pa " + str(pa)
     new_user_music = UserMusic(uid=user_id, exp_num=user_exp_num, music_num=user_music_num, mid=music_id, v=valance, a=arousal, pv=pv, pa=pa, score=user_score, familiarity=user_fam)
     db.session.add(new_user_music)
     db.session.commit()
@@ -415,4 +417,4 @@ def get_new_va(exp_num, music_num, uid, mid):
     predict_v = int(total_delta_v * (current_mus_v-current_pre_v) + current_pre_v)
     predict_a = int(total_delta_a * (current_mus_a-current_pre_a) + current_pre_a)
     print("predict_v: " + str(predict_v) + "\tpredict_a: " + str(predict_a))
-    return predict_v, predict_a
+    return [predict_v, predict_a]
