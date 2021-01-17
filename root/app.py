@@ -298,11 +298,10 @@ def music_recommend(exp_num, music_num, uid, v, a):
             if not music:
                 music = Music.query.filter(Music.mv <= v).order_by(Music.mv.desc()).all()
 
-            valence = music[0].mv
-            arousal = (a - music[0].ma) ** 2
-            mid = music[0].mid
+            arousal = 10000
+            mid = -1
             for i in music:
-                if i.mv > valence + 1 or i.mv < valence - 1:
+                if i.mv > music[0].mv + 1 or i.mv < music[0].mv - 1:
                     break
                 temp_a = (a - i.ma) ** 2
                 if i.mid != last_mid and temp_a < arousal:
