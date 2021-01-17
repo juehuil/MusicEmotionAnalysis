@@ -77,6 +77,8 @@ class UserMusic(db.Model):
     mid = db.Column(db.Integer)
     v = db.Column(db.Integer)
     a = db.Column(db.Integer)
+    pv = db.Column(db.Integer)
+    pa = db.Column(db.Integer)
     score = db.Column(db.Integer)
     familiarity = db.Column(db.Integer)
 
@@ -96,46 +98,6 @@ class UserMemory(db.Model):
 def convert(byte):
     data = literal_eval(byte.decode('utf-8'))
     return data
-
-
-"""
-@app.route('/upload', methods=['POST'])
-def upload():
-    data = convert(request.data)
-    now = datetime.datetime.utcnow()
-    data["upload_time"] = now.strftime('%Y-%m-%d %H:%M:%S')
-    data["v_counts"] = 0
-    data["j_counts"] = 0
-    cur = mysql.connection.cursor()
-    #cur.execute("INSERT INTO Category(compet_id, category_name) VALUES(1, 'Best Movie')")
-    cur.execute("INSERT INTO Movie(uid, film_name, v_counts, j_counts, upload_time, url, category_id, summary) VALUES(%(uid)s,%(film_name)s,%(v_counts)s,%(j_counts)s,%(upload_time)s,%(url)s,%(category_id)s,%(summary)s)",data)
-    mysql.connection.commit()
-    return "upload success"
-
-@app.route('/login', methods=['POST'])
-def login():
-    data = convert(request.data)
-    name = data["uname"]
-    upw = data["upw"]
-    # SELECT uid FROM table WHERE uname = uname AND upw = upw
-    return "login success"
-
-@app.route('/create_exp', methods=['POST'])
-def create_exp():
-    data = convert(request.data)
-    exp_num = data["exp_num"]
-    uid = data["uid"]
-    # INSERT uid, exp_num INTO table
-    return exp_num + 1
-
-@app.route('/', methods=['POST'])
-def create_exp():
-    data = convert(request.data)
-    exp_num = data["exp_num"]
-    uid = data["uid"]
-    # INSERT uid, exp_num INTO table
-    return exp_num + 1
-"""
 
 
 @app.route('/')
@@ -260,10 +222,16 @@ def update_music():
     music_id = data["mid"]
     valance = data["v"]
     arousal = data["a"]
+    pv = -10
+    pa = -10
     user_score = data["score"]
     user_fam = data["familiarity"]
 
-    new_user_music = UserMusic(uid=user_id, exp_num=user_exp_num, music_num=user_music_num, mid=music_id, v=valance, a=arousal, score=user_score, familiarity=user_fam)
+    if user_exp_num >= 3:
+        pv = get_new_v(user_exp_num, user_music_num, user_id, valance, arousal)
+        pa = get_new_a(user_exp_num, user_music_num, user_id, valance, arousal)
+
+    new_user_music = UserMusic(uid=user_id, exp_num=user_exp_num, music_num=user_music_num, mid=music_id, v=valance, a=arousal, pv=pv, pa=pa, score=user_score, familiarity=user_fam)
     db.session.add(new_user_music)
     db.session.commit()
 
@@ -344,7 +312,7 @@ def music_recommend(exp_num, music_num, uid, v, a):
     else:
         if music_num == 1:
             user_mus = UserMusic.query.filter_by(uid=uid).all()
-            scores = [0.003, 0.003, 0.003]
+            scores = [0.003, 0.002, 0.002 ]
             count = [0.001, 0.001, 0.001]
             for i in user_mus:
                 mus = Music.query.filter_by(mid=i.mid).first()
@@ -380,7 +348,7 @@ def music_recommend(exp_num, music_num, uid, v, a):
                     mid = i.mid
 
         else:
-            pass
+            new_v = get_new_v(exp_num, music_num, uid)
 
     music = Music.query.filter_by(mid=mid).first()
     print(str(music.mid) + " " + music.mname + " " + music.murl + " " + str(music.mtype))

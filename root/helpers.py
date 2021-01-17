@@ -40,6 +40,11 @@ def get_sentiment_result(text):
     response = requests.post(url=url, params=params, data=payload, headers=headers).json()
     return response
 
+def get_new_v(exp_num, music_num, uid):
+    return -20
+
+def get_new_a(exp_num, music_num, uid):
+    return -20
 
 def add_music(name, url, type, v, a):
     new_music = Music(mname=name, murl=url, mtype=type, mv=v, ma=a)
