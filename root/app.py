@@ -348,39 +348,26 @@ def music_recommend(exp_num, music_num, uid, v, a):
                     mid = i.mid
 
         else:
-            user_mus = UserMusic.query.filter_by(uid=uid).all()
-            scores = [0.003, 0.003, 0.003]
-            count = [0.001, 0.001, 0.001]
-            for i in user_mus:
-                mus = Music.query.filter_by(mid=i.mid).first()
-                count[mus.mtype - 1] += 1
-                scores[mus.mtype - 1] += i.score
-            for i in range(0, 3):
-                scores[i] = float(scores[i]) / count[i]
-                scores[i] = int(scores[i] * 10)
-            print(str(scores[0]) + " " + str(scores[1]) + " " + str(scores[2]))
-            total = scores[0] + scores[1] + scores[2]
-            rand_num = random.randint(0, total)
-            mtype = 3
-            if rand_num < scores[0]:
-                mtype = 1
-            elif rand_num < scores[0] + scores[1]:
-                mtype = 2
-            print(str(rand_num) + " " + str(mtype) + " " + str(total))
-            music = Music.query.filter((Music.mtype == mtype) & (Music.mv > v)).order_by(Music.mv.asc()).all()
+            user_mem = UserMemory.query.filter_by(uid=uid, exp_num=exp_num, music_num=music_num - 1).first()
+            user_mus = UserMusic.query.filter_by(uid=uid, exp_num=exp_num, music_num=music_num - 1).first()
+            v = user_mus.v
+            a = user_mus.a
+            last_mid = user_mus.mid
+            if user_mem:
+                w = get_w(uid)
+                v = v + (user_mem.positive - 0.5) * w
+            music = Music.query.filter(Music.mv > v).order_by(Music.mv.asc()).all()
             print("music" + str(music))
             if not music:
-                music = Music.query.filter((Music.mtype == mtype) & (Music.mv <= v)).order_by(
-                    Music.mv.desc()).all()
+                music = Music.query.filter(Music.mv <= v).order_by(Music.mv.desc()).all()
 
-            valence = music[0].mv
-            arousal = (a - music[0].ma) ** 2
-            mid = music[0].mid
+            arousal = 10000
+            mid = -1
             for i in music:
-                if i.mv > valence + 1 or i.mv < valence - 1:
+                if i.mv > music[0].mv + 1 or i.mv < music[0].mv - 1:
                     break
                 temp_a = (a - i.ma) ** 2
-                if temp_a < arousal:
+                if i.mid != last_mid and temp_a < arousal:
                     arousal = temp_a
                     mid = i.mid
 
@@ -466,6 +453,12 @@ def get_w(uid):
         w += (user_v-music_v)/mem
         count +=1
     w = w/count
+    w = w + 5
+
+    if w > 10:
+        w = 10
+    elif w < -10:
+        w = -10
     return w
 
 
