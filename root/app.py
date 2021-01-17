@@ -348,7 +348,41 @@ def music_recommend(exp_num, music_num, uid, v, a):
                     mid = i.mid
 
         else:
-            pass
+            user_mus = UserMusic.query.filter_by(uid=uid).all()
+            scores = [0.001, 0.001, 0.002]
+            count = [0.001, 0.001, 0.001]
+            for i in user_mus:
+                mus = Music.query.filter_by(mid=i.mid).first()
+                count[mus.mtype - 1] += 1
+                scores[mus.mtype - 1] += i.score
+            for i in range(0, 3):
+                scores[i] = float(scores[i]) / count[i]
+                scores[i] = int(scores[i] * 10)
+            print(str(scores[0]) + " " + str(scores[1]) + " " + str(scores[2]))
+            total = scores[0] + scores[1] + scores[2]
+            rand_num = random.randint(0, total)
+            mtype = 3
+            if rand_num < scores[0]:
+                mtype = 1
+            elif rand_num < scores[0] + scores[1]:
+                mtype = 2
+            print(str(rand_num) + " " + str(mtype) + " " + str(total))
+            music = Music.query.filter((Music.mtype == mtype) & (Music.mv > v)).order_by(Music.mv.asc()).all()
+            print("music" + str(music))
+            if not music:
+                music = Music.query.filter((Music.mtype == mtype) & (Music.mv <= v)).order_by(
+                    Music.mv.desc()).all()
+
+            valence = music[0].mv
+            arousal = (a - music[0].ma) ** 2
+            mid = music[0].mid
+            for i in music:
+                if i.mv > valence + 1 or i.mv < valence - 1:
+                    break
+                temp_a = (a - i.ma) ** 2
+                if temp_a < arousal:
+                    arousal = temp_a
+                    mid = i.mid
 
     music = Music.query.filter_by(mid=mid).first()
     print(str(music.mid) + " " + music.mname + " " + music.murl + " " + str(music.mtype))
