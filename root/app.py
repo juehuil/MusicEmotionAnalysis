@@ -442,7 +442,7 @@ def get_w(uid):
         w = 10
     elif w < -10:
         w = -10
-    print("w: " + w)
+    print("w: " + str(w))
     return w
 
 
