@@ -312,7 +312,7 @@ def music_recommend(exp_num, music_num, uid, v, a):
     else:
         if music_num == 1:
             user_mus = UserMusic.query.filter_by(uid=uid).all()
-            scores = [0.001, 0.001, 0.001]
+            scores = [0.001, 0.001, 0.002]
             count = [0.001, 0.001, 0.001]
             for i in user_mus:
                 mus = Music.query.filter_by(mid=i.mid).first()
