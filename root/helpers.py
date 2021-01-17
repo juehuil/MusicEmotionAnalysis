@@ -101,10 +101,6 @@ def get_new_va(exp_num, music_num, uid, mid):
     return predict_v, predict_a
 
 
-def get_new_a(exp_num, music_num, uid):
-    return -20
-
-
 def add_music(name, url, type, v, a):
     new_music = Music(mname=name, murl=url, mtype=type, mv=v, ma=a)
     db.session.add(new_music)

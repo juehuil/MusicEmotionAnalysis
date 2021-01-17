@@ -227,8 +227,8 @@ def update_music():
     user_score = data["score"]
     user_fam = data["familiarity"]
 
-    if user_exp_num >= 3:
-        pv, pa = get_new_va(user_exp_num, user_music_num, user_id, music_id)
+    #if user_exp_num >= 3:
+    #    (pv, pa) = get_new_va(user_exp_num, user_music_num, user_id, music_id)
 
     new_user_music = UserMusic(uid=user_id, exp_num=user_exp_num, music_num=user_music_num, mid=music_id, v=valance, a=arousal, pv=pv, pa=pa, score=user_score, familiarity=user_fam)
     db.session.add(new_user_music)
