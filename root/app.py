@@ -457,13 +457,14 @@ def get_new_va(exp_num, music_num, uid, mid):
 def get_w(uid):
     user_mem = UserMemory.query.filter_by(uid=uid).all()
     w = 0
-    count = 0
+    count = 0.01
     for i in user_mem:
         mem = i.positive-0.5
         user_mus = UserMusic.query.filter_by(uid=i.uid, exp_num=i.exp_num, music_num=i.music_num).first()
         user_v = user_mus.v
         music_v = Music.query.filter_by(mid=user_mus.mid).first().mv
         w += (user_v-music_v)/mem
+        count +=1
     w = w/count
     return w
 
