@@ -228,8 +228,7 @@ def update_music():
     user_fam = data["familiarity"]
 
     if user_exp_num >= 3:
-        pv = get_new_v(user_exp_num, user_music_num, user_id, valance, arousal)
-        pa = get_new_a(user_exp_num, user_music_num, user_id, valance, arousal)
+        pv, pa = get_new_va(user_exp_num, user_music_num, user_id, music_id)
 
     new_user_music = UserMusic(uid=user_id, exp_num=user_exp_num, music_num=user_music_num, mid=music_id, v=valance, a=arousal, pv=pv, pa=pa, score=user_score, familiarity=user_fam)
     db.session.add(new_user_music)
@@ -348,7 +347,7 @@ def music_recommend(exp_num, music_num, uid, v, a):
                     mid = i.mid
 
         else:
-            new_v = get_new_v(exp_num, music_num, uid)
+            pass
 
     music = Music.query.filter_by(mid=mid).first()
     print(str(music.mid) + " " + music.mname + " " + music.murl + " " + str(music.mtype))
