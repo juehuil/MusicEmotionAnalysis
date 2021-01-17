@@ -85,15 +85,15 @@ def get_new_va(exp_num, music_num, uid, mid):
     current_pre_v = 0
     current_pre_a = 0
     if music_num == 1:
-        current_pre_v = UserExp.query.filter((UserExp.uid == uid)&(UserExp.exp_num == exp_num)).first().v
-        current_pre_a = UserExp.query.filter((UserExp.uid == uid) & (UserExp.exp_num == exp_num)).first().a
+        current_pre_v = UserExp.query.filter((UserExp.uid == uid)&(UserExp.exp_num == exp_num)).first().initial_v
+        current_pre_a = UserExp.query.filter((UserExp.uid == uid) & (UserExp.exp_num == exp_num)).first().initial_a
     else:
         current_pre_v = UserMusic.query.filter((UserMusic.uid == uid)&(UserMusic.exp_num == exp_num)&(UserMusic.music_num==music_num)).first().pv
         current_pre_a = UserMusic.query.filter((UserMusic.uid == uid) & (UserMusic.exp_num == exp_num) & (UserMusic.music_num == music_num)).first().pa
-
+    print("current_pre_v: " + str(current_pre_v) + "\tcurrent_pre_a: " + str(current_pre_a))
     predict_v = int(total_delta_v * (current_mus_v-current_pre_v) + current_pre_v)
     predict_a = int(total_delta_a * (current_mus_a-current_pre_a) + current_pre_a)
-
+    print("predict_v: " + str(predict_v) + "\tpredict_a: " + str(predict_a))
     return predict_v, predict_a
 
 
