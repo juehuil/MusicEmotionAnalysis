@@ -91,8 +91,8 @@ def get_new_va(exp_num, music_num, uid, mid):
         current_pre_v = UserMusic.query.filter((UserMusic.uid == uid)&(UserMusic.exp_num == exp_num)&(UserMusic.music_num==music_num)).first().pv
         current_pre_a = UserMusic.query.filter((UserMusic.uid == uid) & (UserMusic.exp_num == exp_num) & (UserMusic.music_num == music_num)).first().pa
 
-    predict_v = total_delta_v * (current_mus_v-current_pre_v) + current_pre_v
-    predict_a = total_delta_a * (current_mus_a-current_pre_a) + current_pre_a
+    predict_v = int(total_delta_v * (current_mus_v-current_pre_v) + current_pre_v)
+    predict_a = int(total_delta_a * (current_mus_a-current_pre_a) + current_pre_a)
 
     return predict_v, predict_a
 
