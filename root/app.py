@@ -462,7 +462,7 @@ def get_w(uid):
         mem = i.positive-0.5
         user_mus = UserMusic.query.filter_by(uid=i.uid, exp_num=i.exp_num, music_num=i.music_num).first()
         user_v = user_mus.v
-        music_v = Music.Query.filter_by(mid=user_mus.mid).first().mv
+        music_v = Music.query.filter_by(mid=user_mus.mid).first().mv
         w += (user_v-music_v)/mem
     w = w/count
     return w
