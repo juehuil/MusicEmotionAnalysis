@@ -231,7 +231,7 @@ def update_music():
         result = get_new_va(user_exp_num, user_music_num, user_id, music_id)
         pv = result[0]
         pa = result[1]
-    return "pv " + str(pv) + "pa " + str(pa)
+
     new_user_music = UserMusic(uid=user_id, exp_num=user_exp_num, music_num=user_music_num, mid=music_id, v=valance, a=arousal, pv=pv, pa=pa, score=user_score, familiarity=user_fam)
     db.session.add(new_user_music)
     db.session.commit()
