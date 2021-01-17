@@ -311,25 +311,7 @@ def music_recommend(exp_num, music_num, uid, v, a):
                     mid = i.mid
     else:
         if music_num == 1:
-            user_mus = UserMusic.query.filter_by(uid=uid).all()
-            scores = [0.003, 0.003, 0.003]
-            count = [0.001, 0.001, 0.001]
-            for i in user_mus:
-                mus = Music.query.filter_by(mid=i.mid).first()
-                count[mus.mtype-1] += 1
-                scores[mus.mtype-1] += i.score
-            for i in range(0, 3):
-                scores[i] = float(scores[i])/count[i]
-                scores[i] = int(scores[i]*10)
-            print(str(scores[0]) + " " + str(scores[1]) + " " + str(scores[2]))
-            total = scores[0] + scores[1] + scores[2]
-            rand_num = random.randint(0, total)
-            mtype = 3
-            if rand_num < scores[0]:
-                mtype = 1
-            elif rand_num < scores[0] + scores[1]:
-                mtype = 2
-            print(str(rand_num) + " " + str(mtype) + " " + str(total))
+            mtype = get_mtype(uid)
             music = Music.query.filter((Music.mtype == mtype) & (Music.mv > v)).order_by(Music.mv.asc()).all()
             print("music" + str(music))
             if not music:
@@ -356,8 +338,9 @@ def music_recommend(exp_num, music_num, uid, v, a):
             if user_mem:
                 w = get_w(uid)
                 v = v + (user_mem.positive - 0.5) * w
-            music = Music.query.filter(Music.mv > v).order_by(Music.mv.asc()).all()
-            print("music" + str(music))
+            mtype = get_mtype(uid)
+            music = Music.query.filter(Music.mtype==mtype & Music.mv > v).order_by(Music.mv.asc()).all()
+            #print("music" + str(music))
             if not music:
                 music = Music.query.filter(Music.mv <= v).order_by(Music.mv.desc()).all()
 
@@ -459,7 +442,28 @@ def get_w(uid):
         w = 10
     elif w < -10:
         w = -10
+    print("w: " + w)
     return w
 
 
-
+def get_mtype(uid):
+    user_mus = UserMusic.query.filter_by(uid=uid).all()
+    scores = [0.003, 0.003, 0.003]
+    count = [0.001, 0.001, 0.001]
+    for i in user_mus:
+        mus = Music.query.filter_by(mid=i.mid).first()
+        count[mus.mtype - 1] += 1
+        scores[mus.mtype - 1] += i.score
+    for i in range(0, 3):
+        scores[i] = float(scores[i]) / count[i]
+        scores[i] = int(scores[i] * 10)
+    #print(str(scores[0]) + " " + str(scores[1]) + " " + str(scores[2]))
+    total = scores[0] + scores[1] + scores[2]
+    rand_num = random.randint(0, total)
+    mtype = 3
+    if rand_num < scores[0]:
+        mtype = 1
+    elif rand_num < scores[0] + scores[1]:
+        mtype = 2
+    print(str(rand_num) + " " + str(mtype) + " " + str(total))
+    return mtype
