@@ -339,7 +339,7 @@ def music_recommend(exp_num, music_num, uid, v, a):
                 w = get_w(uid)
                 v = v + (user_mem.positive - 0.5) * w
             mtype = get_mtype(uid)
-            music = Music.query.filter(Music.mtype==mtype & Music.mv > v).order_by(Music.mv.asc()).all()
+            music = Music.query.filter((Music.mtype==mtype) & (Music.mv > v)).order_by(Music.mv.asc()).all()
             #print("music" + str(music))
             if not music:
                 music = Music.query.filter(Music.mv <= v).order_by(Music.mv.desc()).all()
