@@ -440,8 +440,8 @@ def get_w(uid):
 
     if w > 10:
         w = 10
-    elif w < -10:
-        w = -10
+    elif w < 0:
+        w = 0
     print("w: " + str(w))
     return w
 
