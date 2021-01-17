@@ -67,9 +67,11 @@ def get_new_va(exp_num, music_num, uid, mid):
         delta_v = 0
         delta_a = 0
         for i in range(0, 4):
-            delta_v += (u_music_v[i]-pre_music_v[i]+0.5)/(music_v[i]-pre_music_v[i]+0.5)
-            delta_a += (u_music_a[i] - pre_music_a[i] + 0.5) / (music_a[i] - pre_music_a[i] + 0.5)
-            print("\tdelta v: " + str(delta_v) + "\tdelta a: " + str(delta_a))
+            temp_v = (u_music_v[i]-pre_music_v[i]+0.5)/(music_v[i]-pre_music_v[i]+0.5)
+            delta_v += temp_v
+            temp_a = (u_music_a[i] - pre_music_a[i] + 0.5) / (music_a[i] - pre_music_a[i] + 0.5)
+            delta_a += delta_a
+            print("\ttemp v: " + str(temp_v) + "\ttemp a: " + str(temp_a))
 
         total_delta_v += (delta_v/4)
         total_delta_a += (delta_a/4)
