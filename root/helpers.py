@@ -59,7 +59,7 @@ def get_new_va(exp_num, music_num, uid, mid):
             print("\tmusic_num: " + str(music_num))
             u_music_v[i] = user_music[i].v
             u_music_a[i] = user_music[i].a
-            mus = Music.query.filter_by(mid=i.mid).first()
+            mus = Music.query.filter_by(mid=i+1).first()
             music_v[i] = mus.v
             music_a[i] = mus.a
         pre_music_v = [init_v, u_music_v[0], u_music_v[1], u_music_v[2]]
