@@ -411,8 +411,8 @@ def get_new_va(exp_num, music_num, uid, mid):
         current_pre_v = UserExp.query.filter((UserExp.uid == uid)&(UserExp.exp_num == exp_num)).first().initial_v
         current_pre_a = UserExp.query.filter((UserExp.uid == uid) & (UserExp.exp_num == exp_num)).first().initial_a
     else:
-        current_pre_v = UserMusic.query.filter((UserMusic.uid == uid)&(UserMusic.exp_num == exp_num)&(UserMusic.music_num==music_num)).first().pv
-        current_pre_a = UserMusic.query.filter((UserMusic.uid == uid) & (UserMusic.exp_num == exp_num) & (UserMusic.music_num == music_num)).first().pa
+        current_pre_v = UserMusic.query.filter((UserMusic.uid == uid)&(UserMusic.exp_num == exp_num)&(UserMusic.music_num==music_num-1)).first().pv
+        current_pre_a = UserMusic.query.filter((UserMusic.uid == uid) & (UserMusic.exp_num == exp_num) & (UserMusic.music_num == music_num-1)).first().pa
     print("current_pre_v: " + str(current_pre_v) + "\tcurrent_pre_a: " + str(current_pre_a))
     predict_v = int(total_delta_v * (current_mus_v-current_pre_v) + current_pre_v)
     predict_a = int(total_delta_a * (current_mus_a-current_pre_a) + current_pre_a)
