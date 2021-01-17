@@ -312,7 +312,7 @@ def music_recommend(exp_num, music_num, uid, v, a):
     else:
         if music_num == 1:
             user_mus = UserMusic.query.filter_by(uid=uid).all()
-            scores = [0.001, 0.001, 0.002]
+            scores = [0.003, 0.003, 0.003]
             count = [0.001, 0.001, 0.001]
             for i in user_mus:
                 mus = Music.query.filter_by(mid=i.mid).first()
@@ -349,7 +349,7 @@ def music_recommend(exp_num, music_num, uid, v, a):
 
         else:
             user_mus = UserMusic.query.filter_by(uid=uid).all()
-            scores = [0.001, 0.001, 0.002]
+            scores = [0.003, 0.003, 0.003]
             count = [0.001, 0.001, 0.001]
             for i in user_mus:
                 mus = Music.query.filter_by(mid=i.mid).first()
@@ -452,3 +452,20 @@ def get_new_va(exp_num, music_num, uid, mid):
     predict_a = int(total_delta_a * (current_mus_a-current_pre_a) + current_pre_a)
     print("predict_v: " + str(predict_v) + "\tpredict_a: " + str(predict_a))
     return [predict_v, predict_a]
+
+
+def get_w(uid):
+    user_mem = UserMemory.query.filter_by(uid=uid).all()
+    w = 0
+    count = 0
+    for i in user_mem:
+        mem = i.positive-0.5
+        user_mus = UserMusic.query.filter_by(uid=i.uid, exp_num=i.exp_num, music_num=i.music_num).first()
+        user_v = user_mus.v
+        music_v = Music.Query.filter_by(mid=user_mus.mid).first().mv
+        w += (user_v-music_v)/mem
+    w = w/count
+    return w
+
+
+
