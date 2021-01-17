@@ -46,6 +46,7 @@ def get_new_va(exp_num, music_num, uid, mid):
     total_delta_a = 0
 
     for i in range(1, exp_num):
+        print("exp num: " + str(i))
         init_exp = UserExp.query.filter((UserExp.uid == uid)&(UserExp.exp_num == i)).first()
         init_v = init_exp.initial_v
         init_a = init_exp.initial_a
@@ -55,6 +56,7 @@ def get_new_va(exp_num, music_num, uid, mid):
         music_v = [-10, -10, -10, -10]
         music_a = [-10, -10, -10, -10]
         for i in range(0, 4):
+            print("\tmusic_num: " + str(music_num))
             u_music_v[i] = user_music[i].v
             u_music_a[i] = user_music[i].a
             mus = Music.query.filter_by(mid=i.mid).first()
@@ -67,15 +69,18 @@ def get_new_va(exp_num, music_num, uid, mid):
         for i in range(0, 4):
             delta_v += (u_music_v[i]-pre_music_v[i]+0.5)/(music_v[i]-pre_music_v[i]+0.5)
             delta_a += (u_music_a[i] - pre_music_a[i] + 0.5) / (music_a[i] - pre_music_a[i] + 0.5)
+            print("\tdelta v: " + str(delta_v) + "\tdelta a: " + str(delta_a))
         total_delta_v += delta_v/4
         total_delta_a += delta_a/4
 
     total_delta_v = total_delta_v/(exp_num-1)
     total_delta_a = total_delta_a/(exp_num-1)
+    print("total_delta_v: " + str(total_delta_v) + "\ttotal_delta_a: " + str(total_delta_a))
 
     current_mus = Music.query.filter_by(mid=mid).first()
     current_mus_v = current_mus.v
     current_mus_a = current_mus.a
+    print("current_mus_v: " + str(current_mus_v) + "\tcurrent_mus_a: " + str(current_mus_a))
 
     current_pre_v = 0
     current_pre_a = 0
