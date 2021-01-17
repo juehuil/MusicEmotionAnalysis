@@ -60,8 +60,8 @@ def get_new_va(exp_num, music_num, uid, mid):
             u_music_v[i] = user_music[i].v
             u_music_a[i] = user_music[i].a
             mus = Music.query.filter_by(mid=i+1).first()
-            music_v[i] = mus.v
-            music_a[i] = mus.a
+            music_v[i] = mus.mv
+            music_a[i] = mus.ma
         pre_music_v = [init_v, u_music_v[0], u_music_v[1], u_music_v[2]]
         pre_music_a = [init_a, u_music_a[0], u_music_a[1], u_music_a[2]]
         delta_v = 0
@@ -78,8 +78,8 @@ def get_new_va(exp_num, music_num, uid, mid):
     print("total_delta_v: " + str(total_delta_v) + "\ttotal_delta_a: " + str(total_delta_a))
 
     current_mus = Music.query.filter_by(mid=mid).first()
-    current_mus_v = current_mus.v
-    current_mus_a = current_mus.a
+    current_mus_v = current_mus.mv
+    current_mus_a = current_mus.ma
     print("current_mus_v: " + str(current_mus_v) + "\tcurrent_mus_a: " + str(current_mus_a))
 
     current_pre_v = 0
