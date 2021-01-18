@@ -319,7 +319,7 @@ def music_recommend(exp_num, music_num, uid, v, a):
                     mid = i.mid
     else:
         if music_num == 1:
-            mtype = get_mtype(uid)
+            mtype = get_mtype(uid, utype)
             music = Music.query.filter((Music.mtype == mtype) & (Music.mv > v)).order_by(Music.mv.asc()).all()
             # print("music" + str(music))
             if not music:
@@ -350,7 +350,7 @@ def music_recommend(exp_num, music_num, uid, v, a):
             if user_mem:
                 w = get_w(uid)
                 v = v + (user_mem.positive - 0.5) * w
-            mtype = get_mtype(uid)
+            mtype = get_mtype(uid, utype)
             music = Music.query.filter((Music.mtype==mtype) & (Music.mv > v)).order_by(Music.mv.asc()).all()
             # print("music" + str(music))
             if not music:
@@ -458,7 +458,7 @@ def get_w(uid):
     return w
 
 
-def get_mtype(uid):
+def get_mtype(uid, utype):
     user_mus = UserMusic.query.filter_by(uid=uid).all()
     scores = [0.003, 0.003, 0.003]
     count = [0.001, 0.001, 0.001]
@@ -469,6 +469,8 @@ def get_mtype(uid):
     for i in range(0, 3):
         scores[i] = float(scores[i]) / count[i]
         scores[i] = int(scores[i] * 10)
+        if utype == i + 1:
+            scores[i] += 10
     # print(str(scores[0]) + " " + str(scores[1]) + " " + str(scores[2]))
     total = scores[0] + scores[1] + scores[2]
     rand_num = random.randint(0, total)
