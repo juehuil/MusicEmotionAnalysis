@@ -289,10 +289,14 @@ def music_recommend(exp_num, music_num, uid, v, a):
 
         else:
             user_mem = UserMemory.query.filter_by(uid=uid, exp_num=exp_num, music_num=music_num-1).first()
-            user_mus = UserMusic.query.filter_by(uid=uid, exp_num=exp_num, music_num=music_num-1).first()
+            user_mus_all = UserMusic.query.filter_by(uid=uid, exp_num=exp_num).order_by(music_num.desc()).all()
+            user_mus = user_mus_all[0]
             v = user_mus.v
             a = user_mus.a
-            last_mid = user_mus.mid
+            last_mids = user_mus.mid
+            for i in user_mus_all:
+                last_mids += i.mid
+            last_mids = tuple(last_mids)
             if user_mem:
                 v = v + (user_mem.positive-0.5) * 5
             music = Music.query.filter(Music.mv > v).order_by(Music.mv.asc()).all()
@@ -306,7 +310,7 @@ def music_recommend(exp_num, music_num, uid, v, a):
                 if i.mv > music[0].mv + 1 or i.mv < music[0].mv - 1:
                     break
                 temp_a = (a - i.ma) ** 2
-                if i.mid != last_mid and temp_a < arousal:
+                if i.mid not in last_mids and temp_a < arousal:
                     arousal = temp_a
                     mid = i.mid
     else:
@@ -331,10 +335,14 @@ def music_recommend(exp_num, music_num, uid, v, a):
 
         else:
             user_mem = UserMemory.query.filter_by(uid=uid, exp_num=exp_num, music_num=music_num - 1).first()
-            user_mus = UserMusic.query.filter_by(uid=uid, exp_num=exp_num, music_num=music_num - 1).first()
+            user_mus_all = UserMusic.query.filter_by(uid=uid, exp_num=exp_num).order_by(music_num.desc()).all()
+            user_mus = user_mus_all[0]
             v = user_mus.v
             a = user_mus.a
-            last_mid = user_mus.mid
+            last_mids = user_mus.mid
+            for i in user_mus_all:
+                last_mids += i.mid
+            last_mids = tuple(last_mids)
             if user_mem:
                 w = get_w(uid)
                 v = v + (user_mem.positive - 0.5) * w
@@ -350,7 +358,7 @@ def music_recommend(exp_num, music_num, uid, v, a):
                 if i.mv > music[0].mv + 1 or i.mv < music[0].mv - 1:
                     break
                 temp_a = (a - i.ma) ** 2
-                if i.mid != last_mid and temp_a < arousal:
+                if i.mid not in last_mids and temp_a < arousal:
                     arousal = temp_a
                     mid = i.mid
 
