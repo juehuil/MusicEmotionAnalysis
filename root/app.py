@@ -293,9 +293,9 @@ def music_recommend(exp_num, music_num, uid, v, a):
             user_mus = user_mus_all[0]
             v = user_mus.v
             a = user_mus.a
-            last_mids = user_mus.mid
+            last_mids = [user_mus.mid]
             for i in user_mus_all:
-                last_mids += i.mid
+                last_mids.append(i.mid)
             last_mids = tuple(last_mids)
             if user_mem:
                 v = v + (user_mem.positive-0.5) * 5
@@ -339,9 +339,9 @@ def music_recommend(exp_num, music_num, uid, v, a):
             user_mus = user_mus_all[0]
             v = user_mus.v
             a = user_mus.a
-            last_mids = user_mus.mid
+            last_mids = [user_mus.mid]
             for i in user_mus_all:
-                last_mids += i.mid
+                last_mids.append(i.mid)
             last_mids = tuple(last_mids)
             if user_mem:
                 w = get_w(uid)
