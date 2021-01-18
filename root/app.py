@@ -271,7 +271,7 @@ def music_recommend(exp_num, music_num, uid, v, a):
     if exp_num <= 2:
         if music_num == 1:
             music = Music.query.filter((Music.mtype == utype) & (Music.mv > v)).order_by(Music.mv.asc()).all()
-            print("music" + str(music))
+            # print("music" + str(music))
             if not music:
                 music = Music.query.filter((Music.mtype == utype) & (Music.mv <= v)).order_by(
                     Music.mv.desc()).all()
@@ -300,7 +300,7 @@ def music_recommend(exp_num, music_num, uid, v, a):
             if user_mem:
                 v = v + (user_mem.positive-0.5) * 5
             music = Music.query.filter(Music.mv > v).order_by(Music.mv.asc()).all()
-            print("music" + str(music))
+            # print("music" + str(music))
             if not music:
                 music = Music.query.filter(Music.mv <= v).order_by(Music.mv.desc()).all()
 
@@ -317,7 +317,7 @@ def music_recommend(exp_num, music_num, uid, v, a):
         if music_num == 1:
             mtype = get_mtype(uid)
             music = Music.query.filter((Music.mtype == mtype) & (Music.mv > v)).order_by(Music.mv.asc()).all()
-            print("music" + str(music))
+            # print("music" + str(music))
             if not music:
                 music = Music.query.filter((Music.mtype == mtype) & (Music.mv <= v)).order_by(
                     Music.mv.desc()).all()
@@ -348,7 +348,7 @@ def music_recommend(exp_num, music_num, uid, v, a):
                 v = v + (user_mem.positive - 0.5) * w
             mtype = get_mtype(uid)
             music = Music.query.filter((Music.mtype==mtype) & (Music.mv > v)).order_by(Music.mv.asc()).all()
-            #print("music" + str(music))
+            # print("music" + str(music))
             if not music:
                 music = Music.query.filter(Music.mv <= v).order_by(Music.mv.desc()).all()
 
@@ -363,7 +363,7 @@ def music_recommend(exp_num, music_num, uid, v, a):
                     mid = i.mid
 
     music = Music.query.filter_by(mid=mid).first()
-    print(str(music.mid) + " " + music.mname + " " + music.murl + " " + str(music.mtype))
+    # print(str(music.mid) + " " + music.mname + " " + music.murl + " " + str(music.mtype))
     return [music.mid, music.mname, music.murl, music.mtype]
 
 
@@ -377,7 +377,7 @@ def get_new_va(exp_num, music_num, uid, mid):
     total_delta_a = 0
 
     for i in range(1, exp_num):
-        print("exp num: " + str(i))
+        # print("exp num: " + str(i))
         init_exp = UserExp.query.filter((UserExp.uid == uid)&(UserExp.exp_num == i)).first()
         init_v = init_exp.initial_v
         init_a = init_exp.initial_a
@@ -387,7 +387,7 @@ def get_new_va(exp_num, music_num, uid, mid):
         music_v = [-10, -10, -10, -10]
         music_a = [-10, -10, -10, -10]
         for i in range(0, 4):
-            print("\tmusic_num: " + str(i))
+            # print("\tmusic_num: " + str(i))
             u_music_v[i] = user_music[i].v
             u_music_a[i] = user_music[i].a
             mus = Music.query.filter_by(mid=i+1).first()
@@ -402,20 +402,20 @@ def get_new_va(exp_num, music_num, uid, mid):
             delta_v += temp_v
             temp_a = (u_music_a[i] - pre_music_a[i] + 0.5) / (music_a[i] - pre_music_a[i] + 0.5)
             delta_a += delta_a
-            print("\ttemp v: " + str(temp_v) + "\ttemp a: " + str(temp_a))
+            # print("\ttemp v: " + str(temp_v) + "\ttemp a: " + str(temp_a))
 
         total_delta_v += (delta_v/4)
         total_delta_a += (delta_a/4)
-        print("total delta v: " + str(total_delta_v) + "\ttotal delta a: " + str(total_delta_a))
+        # print("total delta v: " + str(total_delta_v) + "\ttotal delta a: " + str(total_delta_a))
 
     total_delta_v = total_delta_v/(exp_num-1)
     total_delta_a = total_delta_a/(exp_num-1)
-    print("total_delta_v: " + str(total_delta_v) + "\ttotal_delta_a: " + str(total_delta_a))
+    # print("total_delta_v: " + str(total_delta_v) + "\ttotal_delta_a: " + str(total_delta_a))
 
     current_mus = Music.query.filter_by(mid=mid).first()
     current_mus_v = current_mus.mv
     current_mus_a = current_mus.ma
-    print("current_mus_v: " + str(current_mus_v) + "\tcurrent_mus_a: " + str(current_mus_a))
+    # print("current_mus_v: " + str(current_mus_v) + "\tcurrent_mus_a: " + str(current_mus_a))
 
     current_pre_v = 0
     current_pre_a = 0
@@ -425,10 +425,10 @@ def get_new_va(exp_num, music_num, uid, mid):
     else:
         current_pre_v = UserMusic.query.filter((UserMusic.uid == uid)&(UserMusic.exp_num == exp_num)&(UserMusic.music_num==music_num-1)).first().pv
         current_pre_a = UserMusic.query.filter((UserMusic.uid == uid) & (UserMusic.exp_num == exp_num) & (UserMusic.music_num == music_num-1)).first().pa
-    print("current_pre_v: " + str(current_pre_v) + "\tcurrent_pre_a: " + str(current_pre_a))
+    # print("current_pre_v: " + str(current_pre_v) + "\tcurrent_pre_a: " + str(current_pre_a))
     predict_v = int(total_delta_v * (current_mus_v-current_pre_v) + current_pre_v)
     predict_a = int(total_delta_a * (current_mus_a-current_pre_a) + current_pre_a)
-    print("predict_v: " + str(predict_v) + "\tpredict_a: " + str(predict_a))
+    # print("predict_v: " + str(predict_v) + "\tpredict_a: " + str(predict_a))
     return [predict_v, predict_a]
 
 
@@ -450,7 +450,7 @@ def get_w(uid):
         w = 10
     elif w < 0:
         w = 0
-    print("w: " + str(w))
+    # print("w: " + str(w))
     return w
 
 
@@ -465,7 +465,7 @@ def get_mtype(uid):
     for i in range(0, 3):
         scores[i] = float(scores[i]) / count[i]
         scores[i] = int(scores[i] * 10)
-    #print(str(scores[0]) + " " + str(scores[1]) + " " + str(scores[2]))
+    # print(str(scores[0]) + " " + str(scores[1]) + " " + str(scores[2]))
     total = scores[0] + scores[1] + scores[2]
     rand_num = random.randint(0, total)
     mtype = 3
@@ -473,5 +473,5 @@ def get_mtype(uid):
         mtype = 1
     elif rand_num < scores[0] + scores[1]:
         mtype = 2
-    print(str(rand_num) + " " + str(mtype) + " " + str(total))
+    # print(str(rand_num) + " " + str(mtype) + " " + str(total))
     return mtype
