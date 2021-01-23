@@ -158,11 +158,13 @@ def login():
                 return json.dumps({"u_id": str(user.uid), "exp_num": user_exp_num.exp_num, "music_num": user_music_num.music_num,"start_date": str(user.ustart), "v": v, "a": a, "mid": result[0], "mname": result[1], "murl": result[2], "mtype": result[3]})
             else:
                 user_mem = UserMemory.query.filter_by(uid=user.uid & user_exp_num.exp_num).all()
-                db.session.delete(user_mem)
-                db.session.commit()
+                for i in user_mem:
+                    db.session.delete(i)
+                    db.session.commit()
                 user_music = UserMusic.query.filter_by(uid=user.uid & user_exp_num.exp_num).all()
-                db.session.delete(user_music)
-                db.session.commit()
+                for i in user_music:
+                    db.session.delete(i)
+                    db.session.commit()
                 exp_num = user_exp_num.exp_num-1
                 db.session.delete(user_exp_num)
                 db.session.commit()
