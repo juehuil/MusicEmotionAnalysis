@@ -269,8 +269,8 @@ def update_memory():
     sent = get_sentiment_result(user_mem)['items'][0]['sentiment']
     # return str(pos) + " " + str(neg) + " " + str(conf) + " " + str(sent)
 
-    user_mem = UserMemory.query.filter_by(uid=user_id, exp_num=user_exp_num, music_num=user_music_num).first()
-    if user_mem is None:
+    user_mem_exist = UserMemory.query.filter_by(uid=user_id, exp_num=user_exp_num, music_num=user_music_num).first()
+    if user_mem_exist is None:
         new_memory = UserMemory(uid=user_id, exp_num=user_exp_num, music_num=user_music_num, memory=user_mem, positive=pos,
                                 negative=neg, confidence=conf, sentiment=sent)
         db.session.add(new_memory)
