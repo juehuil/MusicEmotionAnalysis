@@ -15,19 +15,16 @@ app.debug = True
 
 CORS(app)
 
-ENV = 'new'
+ENV = 'post'
 
 if ENV == 'dev':
     app.debug = True
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:lL@1998623@localhost/Test'
-elif ENV == 'new':
+else:
     app.debug = False
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://jqhqfyiuepxrpy:b5c14a8054d45477e77bd24b7bca5e8ce26f17f00081aea7759de5373ebbe8db@ec2-52-87-107-83.compute-1.amazonaws.com:5432/dea9qjhn4cne4q'
-#else:
-#    app.debug = False
-#    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://gmetnwrezeyokw:d1471eb9f2cb47425469418f6d2cb80' \
-#                                            'a7ad29df34f4f928f1116c6103cd35142@ec2-75-101-212-64.compute-1' \
-#                                            '.amazonaws.com:5432/dfirkg7gdep2ks'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://gmetnwrezeyokw:d1471eb9f2cb47425469418f6d2cb80' \
+                                            'a7ad29df34f4f928f1116c6103cd35142@ec2-75-101-212-64.compute-1' \
+                                            '.amazonaws.com:5432/dfirkg7gdep2ks'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATION S'] = False
 
