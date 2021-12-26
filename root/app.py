@@ -1,4 +1,5 @@
 # creating Flask instance variable app
+
 from ast import literal_eval
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
@@ -176,11 +177,6 @@ def login():
         return json.dumps({"u_id": str(user.uid), "exp_num": user_exp_num.exp_num, "music_num": 0, "start_date": str(user.ustart)})
     else:
         return 'Incorrect Password!'
-
-
-@app.route('/music', methods=['POST'])
-def music_playing():
-    pass
 
 
 @app.route('/experiment/start', methods=['POST'])
@@ -379,7 +375,6 @@ def music_recommend(exp_num, music_num, uid, v, a):
                     mid = i.mid
 
     music = Music.query.filter_by(mid=mid).first()
-    # print(str(music.mid) + " " + music.mname + " " + music.murl + " " + str(music.mtype))
     return [music.mid, music.mname, music.murl, music.mtype]
 
 
@@ -441,10 +436,8 @@ def get_new_va(exp_num, music_num, uid, mid):
     else:
         current_pre_v = UserMusic.query.filter((UserMusic.uid == uid)&(UserMusic.exp_num == exp_num)&(UserMusic.music_num==music_num-1)).first().pv
         current_pre_a = UserMusic.query.filter((UserMusic.uid == uid) & (UserMusic.exp_num == exp_num) & (UserMusic.music_num == music_num-1)).first().pa
-    # print("current_pre_v: " + str(current_pre_v) + "\tcurrent_pre_a: " + str(current_pre_a))
     predict_v = int(total_delta_v * (current_mus_v-current_pre_v) + current_pre_v)
     predict_a = int(total_delta_a * (current_mus_a-current_pre_a) + current_pre_a)
-    # print("predict_v: " + str(predict_v) + "\tpredict_a: " + str(predict_a))
     return [predict_v, predict_a]
 
 
@@ -484,7 +477,6 @@ def get_mtype(uid, utype):
         scores[i] = int(scores[i] * 10)
         if utype == i + 1:
             scores[i] += 10
-    # print(str(scores[0]) + " " + str(scores[1]) + " " + str(scores[2]))
     total = scores[0] + scores[1] + scores[2]
     rand_num = random.randint(0, total)
     mtype = 3
@@ -492,5 +484,4 @@ def get_mtype(uid, utype):
         mtype = 1
     elif rand_num < scores[0] + scores[1]:
         mtype = 2
-    # print(str(rand_num) + " " + str(mtype) + " " + str(total))
     return mtype

@@ -41,9 +41,6 @@ def get_sentiment_result(text):
     return response
 
 
-
-
-
 def add_music(name, url, type, v, a):
     new_music = Music(mname=name, murl=url, mtype=type, mv=v, ma=a)
     db.session.add(new_music)
@@ -64,7 +61,7 @@ def read_musics(file_name):
         print(name + " " + url + " " + str(type) + " " + str(v) + " " + str(a))
         add_music(name, url, type, v, a)
 
-
-if __name__ == '__main__':
-    print(get_sentiment_result('白日放歌须纵酒，青春作伴好还乡。'))
-    print(get_sentiment_result('思悠悠，恨悠悠，恨到归时方始休。'))
+#
+# if __name__ == '__main__':
+#     print(get_sentiment_result('白日放歌须纵酒，青春作伴好还乡。'))
+#     print(get_sentiment_result('思悠悠，恨悠悠，恨到归时方始休。'))
